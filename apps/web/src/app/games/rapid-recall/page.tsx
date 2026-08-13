@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { GameEngine } from '@cerebro-play/game-engine';
 import { rapidRecallDefinition } from '@cerebro-play/games';
 import { calculateGameResult } from '@cerebro-play/scoring';
-import { createIndexedDbStore } from '@cerebro-play/shared-utils';
 import { getOrCreateGuestUser } from '@cerebro-play/user';
 import { GameAttempt, GameContent, GameResult, RoleTheme, User } from '@cerebro-play/shared-models';
+import { gameResultsStore } from '@/lib/game-results-store';
 
 const MEMORIZE_DURATION_MS = 5000;
 const DIFFICULTY = 'easy';
@@ -14,12 +14,6 @@ const DIFFICULTY = 'easy';
 // Manual test toggle: set to 'software' | 'design' | 'finance' | 'marketing' | 'general' while play-testing,
 // then leave undefined (defaults to 'general') before calling this done.
 const ROLE_THEME: RoleTheme | undefined = undefined;
-
-const gameResultsStore = createIndexedDbStore<GameResult>({
-  dbName: 'cerebro-play-game-results',
-  storeName: 'results',
-  keyPath: 'sessionId',
-});
 
 type Phase = 'idle' | 'memorizing' | 'answering' | 'result';
 
