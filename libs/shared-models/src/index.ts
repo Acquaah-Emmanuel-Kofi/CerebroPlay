@@ -1,3 +1,3 @@
-export * from './lib/enums.js';
-export * from './lib/entities.js';
-export * from './lib/game-definition.js';
+﻿export * from './lib/enums';
+export * from './lib/entities';
+export * from './lib/game-definition';

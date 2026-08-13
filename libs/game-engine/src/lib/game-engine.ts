@@ -1,7 +1,7 @@
-import { Difficulty, GameAttempt, GameContent, GameDefinition, RoleTheme } from '@cerebro-play/shared-models';
-import { GameEngineEventEmitter } from './events.js';
-import { GameEngineState } from './state.js';
-import { GameTimer } from './timer.js';
+﻿import { Difficulty, GameAttempt, GameContent, GameDefinition, RoleTheme } from '@cerebro-play/shared-models';
+import { GameEngineEventEmitter } from './events';
+import { GameEngineState } from './state';
+import { GameTimer } from './timer';
 
 export interface StartOptions {
   difficulty: Difficulty;

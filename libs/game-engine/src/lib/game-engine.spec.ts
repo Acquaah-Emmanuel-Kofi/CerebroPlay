@@ -1,5 +1,5 @@
-import { GameDefinition } from '@cerebro-play/shared-models';
-import { GameEngine } from './game-engine.js';
+﻿import { GameDefinition } from '@cerebro-play/shared-models';
+import { GameEngine } from './game-engine';
 
 function createDefinition(overrides: Partial<GameDefinition> = {}): GameDefinition {
   return {

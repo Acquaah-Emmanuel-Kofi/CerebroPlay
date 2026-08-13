@@ -1,4 +1,4 @@
-import { CognitiveSkill, Difficulty, GameType, LeaderboardScope, RoleTheme } from './enums.js';
+﻿import { CognitiveSkill, Difficulty, GameType, LeaderboardScope, RoleTheme } from './enums';
 
 export interface User {
   id: string;
