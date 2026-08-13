@@ -49,10 +49,16 @@
   ],
   "references": [
     {
-      "path": "../../libs/scoring"
+      "path": "../../libs/user"
+    },
+    {
+      "path": "../../libs/shared-utils"
     },
     {
       "path": "../../libs/shared-models"
+    },
+    {
+      "path": "../../libs/scoring"
     },
     {
       "path": "../../libs/games"

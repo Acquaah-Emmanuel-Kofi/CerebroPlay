@@ -1,10 +1,12 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { GameEngine } from '@cerebro-play/game-engine';
 import { rapidRecallDefinition } from '@cerebro-play/games';
 import { calculateGameResult } from '@cerebro-play/scoring';
-import { GameAttempt, GameContent, GameResult, RoleTheme } from '@cerebro-play/shared-models';
+import { createIndexedDbStore } from '@cerebro-play/shared-utils';
+import { getOrCreateGuestUser } from '@cerebro-play/user';
+import { GameAttempt, GameContent, GameResult, RoleTheme, User } from '@cerebro-play/shared-models';
 
 const MEMORIZE_DURATION_MS = 5000;
 const DIFFICULTY = 'easy';
@@ -12,6 +14,12 @@ const DIFFICULTY = 'easy';
 // Manual test toggle: set to 'software' | 'design' | 'finance' | 'marketing' | 'general' while play-testing,
 // then leave undefined (defaults to 'general') before calling this done.
 const ROLE_THEME: RoleTheme | undefined = undefined;
+
+const gameResultsStore = createIndexedDbStore<GameResult>({
+  dbName: 'cerebro-play-game-results',
+  storeName: 'results',
+  keyPath: 'sessionId',
+});
 
 type Phase = 'idle' | 'memorizing' | 'answering' | 'result';
 
@@ -22,6 +30,13 @@ export default function RapidRecallHarnessPage() {
   const [answer, setAnswer] = useState('');
   const [attempt, setAttempt] = useState<GameAttempt | null>(null);
   const [result, setResult] = useState<GameResult | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [history, setHistory] = useState<GameResult[]>([]);
+
+  useEffect(() => {
+    getOrCreateGuestUser().then(setUser).catch(console.error);
+    gameResultsStore.getAll().then(setHistory).catch(console.error);
+  }, []);
 
   function start() {
     const sessionId = `session-${Date.now()}`;
@@ -36,14 +51,17 @@ export default function RapidRecallHarnessPage() {
 
     engine.on('attemptCompleted', ({ attempt: completedAttempt }) => {
       setAttempt(completedAttempt);
-      setResult(
-        calculateGameResult({
-          sessionId,
-          skill: rapidRecallDefinition.skill,
-          difficulty: DIFFICULTY,
-          attempts: [completedAttempt],
-        }),
-      );
+      const gameResult = calculateGameResult({
+        sessionId,
+        skill: rapidRecallDefinition.skill,
+        difficulty: DIFFICULTY,
+        attempts: [completedAttempt],
+      });
+      setResult(gameResult);
+      gameResultsStore
+        .put(gameResult)
+        .then(() => setHistory((prev) => [...prev, gameResult]))
+        .catch(console.error);
       setPhase('result');
     });
 
@@ -68,6 +86,8 @@ export default function RapidRecallHarnessPage() {
   return (
     <main style={{ padding: 24, fontFamily: 'sans-serif' }}>
       <h1>Rapid Recall (harness)</h1>
+
+      <p>Player: {user?.id ?? 'loading...'}</p>
 
       {phase === 'idle' && <button onClick={start}>Start</button>}
 
@@ -97,6 +117,15 @@ export default function RapidRecallHarnessPage() {
           <button onClick={playAgain}>Play again</button>
         </div>
       )}
+
+      <h2>History</h2>
+      <ul>
+        {history.map((entry) => (
+          <li key={entry.sessionId}>
+            {entry.sessionId}: {entry.score} pts
+          </li>
+        ))}
+      </ul>
     </main>
   );
 }

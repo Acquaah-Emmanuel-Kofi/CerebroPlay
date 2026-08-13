@@ -23,6 +23,12 @@
     },
     {
       "path": "./libs/scoring"
+    },
+    {
+      "path": "./libs/shared-utils"
+    },
+    {
+      "path": "./libs/user"
     }
   ]
 }
