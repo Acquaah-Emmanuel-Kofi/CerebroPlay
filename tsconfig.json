@@ -8,6 +8,12 @@
     },
     {
       "path": "./apps/web"
+    },
+    {
+      "path": "./libs/shared-models"
+    },
+    {
+      "path": "./libs/game-engine"
     }
   ]
 }
