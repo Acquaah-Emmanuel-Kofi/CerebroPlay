@@ -9,6 +9,8 @@
     "@cerebro-play/game-engine": "*",
     "@cerebro-play/games": "*",
     "@cerebro-play/scoring": "*",
-    "@cerebro-play/shared-models": "*"
+    "@cerebro-play/shared-models": "*",
+    "@cerebro-play/shared-utils": "*",
+    "@cerebro-play/user": "*"
   }
 }
