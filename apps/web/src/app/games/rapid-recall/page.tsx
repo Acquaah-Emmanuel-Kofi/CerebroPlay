@@ -3,9 +3,11 @@
 import { useRef, useState } from 'react';
 import { GameEngine } from '@cerebro-play/game-engine';
 import { rapidRecallDefinition } from '@cerebro-play/games';
-import { GameAttempt, GameContent, RoleTheme } from '@cerebro-play/shared-models';
+import { calculateGameResult } from '@cerebro-play/scoring';
+import { GameAttempt, GameContent, GameResult, RoleTheme } from '@cerebro-play/shared-models';
 
 const MEMORIZE_DURATION_MS = 5000;
+const DIFFICULTY = 'easy';
 
 // Manual test toggle: set to 'software' | 'design' | 'finance' | 'marketing' | 'general' while play-testing,
 // then leave undefined (defaults to 'general') before calling this done.
@@ -19,9 +21,11 @@ export default function RapidRecallHarnessPage() {
   const [content, setContent] = useState<GameContent | null>(null);
   const [answer, setAnswer] = useState('');
   const [attempt, setAttempt] = useState<GameAttempt | null>(null);
+  const [result, setResult] = useState<GameResult | null>(null);
 
   function start() {
-    const engine = new GameEngine(rapidRecallDefinition, `session-${Date.now()}`);
+    const sessionId = `session-${Date.now()}`;
+    const engine = new GameEngine(rapidRecallDefinition, sessionId);
     engineRef.current = engine;
 
     engine.on('challengePresented', ({ content: presentedContent }) => {
@@ -32,10 +36,18 @@ export default function RapidRecallHarnessPage() {
 
     engine.on('attemptCompleted', ({ attempt: completedAttempt }) => {
       setAttempt(completedAttempt);
+      setResult(
+        calculateGameResult({
+          sessionId,
+          skill: rapidRecallDefinition.skill,
+          difficulty: DIFFICULTY,
+          attempts: [completedAttempt],
+        }),
+      );
       setPhase('result');
     });
 
-    engine.start({ difficulty: 'easy', roleTheme: ROLE_THEME });
+    engine.start({ difficulty: DIFFICULTY, roleTheme: ROLE_THEME });
   }
 
   function submit() {
@@ -49,6 +61,7 @@ export default function RapidRecallHarnessPage() {
     setContent(null);
     setAnswer('');
     setAttempt(null);
+    setResult(null);
     setPhase('idle');
   }
 
@@ -73,11 +86,14 @@ export default function RapidRecallHarnessPage() {
         </div>
       )}
 
-      {phase === 'result' && attempt && (
+      {phase === 'result' && attempt && result && (
         <div>
           <p>{attempt.isCorrect ? 'Correct!' : 'Incorrect.'}</p>
           <p>Your answer: {String(attempt.submittedAnswer)}</p>
           <p>Correct answer: {String(attempt.content.correctAnswer)}</p>
+          <p>
+            Score: {result.score} | Accuracy: {result.accuracy}% | Speed: {result.speed}%
+          </p>
           <button onClick={playAgain}>Play again</button>
         </div>
       )}
