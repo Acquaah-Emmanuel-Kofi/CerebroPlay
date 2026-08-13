@@ -5,15 +5,11 @@ import { GameEngine } from '@cerebro-play/game-engine';
 import { rapidRecallDefinition } from '@cerebro-play/games';
 import { calculateGameResult } from '@cerebro-play/scoring';
 import { getOrCreateGuestUser } from '@cerebro-play/user';
-import { GameAttempt, GameContent, GameResult, RoleTheme, User } from '@cerebro-play/shared-models';
+import { GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
 import { gameResultsStore } from '@/lib/game-results-store';
 
 const MEMORIZE_DURATION_MS = 5000;
 const DIFFICULTY = 'easy';
-
-// Manual test toggle: set to 'software' | 'design' | 'finance' | 'marketing' | 'general' while play-testing,
-// then leave undefined (defaults to 'general') before calling this done.
-const ROLE_THEME: RoleTheme | undefined = undefined;
 
 type Phase = 'idle' | 'memorizing' | 'answering' | 'result';
 
@@ -59,7 +55,7 @@ export default function RapidRecallHarnessPage() {
       setPhase('result');
     });
 
-    engine.start({ difficulty: DIFFICULTY, roleTheme: ROLE_THEME });
+    engine.start({ difficulty: DIFFICULTY, roleTheme: user?.role });
   }
 
   function submit() {
