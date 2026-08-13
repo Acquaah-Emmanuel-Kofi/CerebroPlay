@@ -1,5 +1,4 @@
 {
-  "installCommand": "npm install",
   "buildCommand": "npx nx build web",
   "outputDirectory": "apps/web/.next"
 }
