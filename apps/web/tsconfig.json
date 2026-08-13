@@ -38,8 +38,8 @@
     "src/**/*.tsx",
     "src/**/*.js",
     "src/**/*.jsx",
-    "../../apps/CerebroPlay/.next/types/**/*.ts",
-    "../../dist/apps/CerebroPlay/.next/types/**/*.ts",
+    "../../apps/web/.next/types/**/*.ts",
+    "../../dist/apps/web/.next/types/**/*.ts",
     "index.d.ts",
     "next-env.d.ts"
   ],

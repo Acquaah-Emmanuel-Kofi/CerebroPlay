@@ -5,13 +5,13 @@ const createJestConfig = nextJest({
 });
 
 const config = {
-  displayName: '@cerebro-play/CerebroPlay',
+  displayName: '@cerebro-play/web',
   preset: '../../jest.preset.js',
   transform: {
     '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/apps/CerebroPlay',
+  coverageDirectory: '../../coverage/apps/web',
   testEnvironment: 'jsdom',
 };
 

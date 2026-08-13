@@ -1,10 +1,10 @@
 {
-  "name": "@cerebro-play/CerebroPlay-e2e",
+  "name": "@cerebro-play/web-e2e",
   "version": "0.0.1",
   "private": true,
   "nx": {
     "implicitDependencies": [
-      "@cerebro-play/CerebroPlay"
+      "@cerebro-play/web"
     ]
   }
 }

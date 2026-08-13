@@ -1,5 +1,5 @@
 {
-  "name": "@cerebro-play/CerebroPlay",
+  "name": "@cerebro-play/web",
   "version": "0.0.1",
   "private": true,
   "dependencies": {

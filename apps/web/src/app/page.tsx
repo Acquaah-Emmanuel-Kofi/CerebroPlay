@@ -14,7 +14,7 @@ export default function Index() {
         <div id="welcome">
           <h1>
             <span> Hello there, </span>
-            Welcome @cerebro-play/CerebroPlay 👋
+            Welcome @cerebro-play/web 👋
           </h1>
         </div>
 
@@ -387,7 +387,7 @@ export default function Index() {
               </svg>
               View project details
             </summary>
-            <pre>nx show project @cerebro-play/CerebroPlay --web</pre>
+            <pre>nx show project @cerebro-play/web --web</pre>
           </details>
           <details>
             <summary>

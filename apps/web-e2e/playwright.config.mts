@@ -31,7 +31,7 @@ export default defineConfig({
   },
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npx nx run @cerebro-play/CerebroPlay:dev',
+    command: 'npx nx run @cerebro-play/web:dev',
     url: 'http://localhost:3000',
     reuseExistingServer: true,
     cwd: workspaceRoot
