@@ -1,5 +1,5 @@
-import { CognitiveSkill, Difficulty, GameType, RoleTheme } from './enums.js';
-import { GameResult } from './entities.js';
+﻿import { CognitiveSkill, Difficulty, GameType, RoleTheme } from './enums';
+import { GameResult } from './entities';
 
 export interface DifficultyConfig {
   difficulty: Difficulty;

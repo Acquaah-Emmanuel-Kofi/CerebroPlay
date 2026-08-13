@@ -14,6 +14,12 @@
     },
     {
       "path": "./libs/game-engine"
+    },
+    {
+      "path": "./libs/game-data"
+    },
+    {
+      "path": "./libs/games"
     }
   ]
 }

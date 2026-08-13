@@ -1,4 +1,4 @@
-import { GameTimer } from './timer.js';
+﻿import { GameTimer } from './timer';
 
 describe('GameTimer', () => {
   beforeEach(() => {

@@ -1,5 +1,5 @@
-import { GameAttempt, GameContent } from '@cerebro-play/shared-models';
-import { GameEngineState } from './state.js';
+﻿import { GameAttempt, GameContent } from '@cerebro-play/shared-models';
+import { GameEngineState } from './state';
 
 export interface GameEngineEventMap {
   stateChanged: { state: GameEngineState };
