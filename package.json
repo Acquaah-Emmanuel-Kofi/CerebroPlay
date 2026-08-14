@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "nx dev web",
-    "build": "nx build web"
+    "build": "nx build web",
+    "start": "nx start web"
   },
   "private": true,
   "dependencies": {
