@@ -61,6 +61,9 @@
       "path": "../../libs/scoring"
     },
     {
+      "path": "../../libs/progression"
+    },
+    {
       "path": "../../libs/games"
     },
     {

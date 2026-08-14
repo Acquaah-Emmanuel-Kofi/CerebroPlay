@@ -8,6 +8,7 @@
     "react-dom": "^19.0.0",
     "@cerebro-play/game-engine": "*",
     "@cerebro-play/games": "*",
+    "@cerebro-play/progression": "*",
     "@cerebro-play/scoring": "*",
     "@cerebro-play/shared-models": "*",
     "@cerebro-play/shared-utils": "*",

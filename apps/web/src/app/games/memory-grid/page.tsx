@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { GameEngine } from '@cerebro-play/game-engine';
 import { memoryGridDefinition } from '@cerebro-play/games';
-import { calculateGameResult } from '@cerebro-play/scoring';
+import { calculateLevel } from '@cerebro-play/progression';
 import { getOrCreateGuestUser } from '@cerebro-play/user';
-import { GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
+import { Achievement, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
+import { completeGameSession } from '@/lib/complete-game-session';
 import { gameResultsStore } from '@/lib/game-results-store';
 
 const MEMORIZE_DURATION_MS = 4000;
@@ -27,6 +28,9 @@ export default function MemoryGridHarnessPage() {
   const [result, setResult] = useState<GameResult | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [history, setHistory] = useState<GameResult[]>([]);
+  const [xpAwarded, setXpAwarded] = useState(0);
+  const [leveledUp, setLeveledUp] = useState(false);
+  const [newAchievements, setNewAchievements] = useState<Achievement[]>([]);
 
   useEffect(() => {
     getOrCreateGuestUser().then(setUser).catch(console.error);
@@ -47,18 +51,21 @@ export default function MemoryGridHarnessPage() {
 
     engine.on('attemptCompleted', ({ attempt: completedAttempt }) => {
       setAttempt(completedAttempt);
-      const gameResult = calculateGameResult({
-        sessionId,
-        skill: memoryGridDefinition.skill,
-        difficulty: DIFFICULTY,
-        attempts: [completedAttempt],
-      });
-      setResult(gameResult);
-      gameResultsStore
-        .put(gameResult)
-        .then(() => setHistory((prev) => [...prev, gameResult]))
+      if (!user) return;
+      completeGameSession(
+        { sessionId, skill: memoryGridDefinition.skill, difficulty: DIFFICULTY, attempts: [completedAttempt] },
+        user,
+      )
+        .then(({ gameResult, updatedUser, xpAwarded: awarded, leveledUp: didLevelUp, newAchievements: earned }) => {
+          setResult(gameResult);
+          setUser(updatedUser);
+          setXpAwarded(awarded);
+          setLeveledUp(didLevelUp);
+          setNewAchievements(earned);
+          setHistory((prev) => [...prev, gameResult]);
+          setPhase('result');
+        })
         .catch(console.error);
-      setPhase('result');
     });
 
     engine.start({ difficulty: DIFFICULTY });
@@ -78,6 +85,9 @@ export default function MemoryGridHarnessPage() {
     setSelected([]);
     setAttempt(null);
     setResult(null);
+    setXpAwarded(0);
+    setLeveledUp(false);
+    setNewAchievements([]);
     setPhase('idle');
   }
 
@@ -136,6 +146,15 @@ export default function MemoryGridHarnessPage() {
           <p>
             Score: {result.score} | Accuracy: {result.accuracy}% | Speed: {result.speed}%
           </p>
+          <p>+{xpAwarded} XP</p>
+          {leveledUp && user && (
+            <p>
+              Level up! You&apos;re now Level {user.level} — {calculateLevel(user.xp).name}
+            </p>
+          )}
+          {newAchievements.length > 0 && (
+            <p>New achievement{newAchievements.length > 1 ? 's' : ''}: {newAchievements.map((a) => a.name).join(', ')}</p>
+          )}
           <button onClick={playAgain}>Play again</button>
         </div>
       )}
