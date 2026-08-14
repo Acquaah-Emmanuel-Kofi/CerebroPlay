@@ -7,7 +7,8 @@ import { calculateLevel } from '@cerebro-play/progression';
 import { getOrCreateGuestUser } from '@cerebro-play/user';
 import { Achievement, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
 import { completeGameSession } from '@/lib/complete-game-session';
-import { gameResultsStore } from '@/lib/game-results-store';
+import { GameShell } from '@/components/game-shell';
+import { GameResultCard } from '@/components/game-result-card';
 
 const DIFFICULTY = 'easy';
 const ROUNDS_PER_SESSION = 5;
@@ -32,14 +33,13 @@ export default function SortItHarnessPage() {
   const [lastCorrect, setLastCorrect] = useState<boolean | null>(null);
   const [result, setResult] = useState<GameResult | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [history, setHistory] = useState<GameResult[]>([]);
   const [xpAwarded, setXpAwarded] = useState(0);
   const [leveledUp, setLeveledUp] = useState(false);
   const [newAchievements, setNewAchievements] = useState<Achievement[]>([]);
+  const [isPersonalBest, setIsPersonalBest] = useState(false);
 
   useEffect(() => {
     getOrCreateGuestUser().then(setUser).catch(console.error);
-    gameResultsStore.getAll().then(setHistory).catch(console.error);
   }, []);
 
   function start() {
@@ -77,13 +77,13 @@ export default function SortItHarnessPage() {
           },
           user,
         )
-          .then(({ gameResult, updatedUser, xpAwarded: awarded, leveledUp: didLevelUp, newAchievements: earned }) => {
+          .then(({ gameResult, updatedUser, xpAwarded: awarded, leveledUp: didLevelUp, newAchievements: earned, isPersonalBest: personalBest }) => {
             setResult(gameResult);
             setUser(updatedUser);
             setXpAwarded(awarded);
             setLeveledUp(didLevelUp);
             setNewAchievements(earned);
-            setHistory((prev) => [...prev, gameResult]);
+            setIsPersonalBest(personalBest);
             setPhase('result');
           })
           .catch(console.error);
@@ -108,29 +108,53 @@ export default function SortItHarnessPage() {
     setXpAwarded(0);
     setLeveledUp(false);
     setNewAchievements([]);
+    setIsPersonalBest(false);
     setPhase('idle');
   }
 
   const data = content?.data as SortItData | undefined;
+  const level = user ? calculateLevel(user.xp) : null;
 
   return (
-    <main style={{ padding: 24, fontFamily: 'sans-serif' }}>
-      <h1>Sort It (harness)</h1>
-
-      <p>Player: {user?.id ?? 'loading...'}</p>
-
-      {phase === 'idle' && <button onClick={start}>Start</button>}
+    <GameShell
+      gameName="Sort It"
+      headerRight={
+        phase === 'answering' ? (
+          <span className="font-label-bold text-label-bold text-on-surface-variant">
+            {round}/{ROUNDS_PER_SESSION}
+          </span>
+        ) : undefined
+      }
+    >
+      {phase === 'idle' && (
+        <div className="flex-1 flex flex-col items-center justify-center gap-md text-center">
+          <p className="font-body text-body-md text-on-surface-variant">Sort each item into the right category.</p>
+          <button
+            type="button"
+            onClick={start}
+            className="h-14 px-lg bg-primary text-on-primary rounded-full font-label-bold text-label-bold shadow-md shadow-primary/20 active:scale-[0.98] transition-transform"
+          >
+            Start
+          </button>
+        </div>
+      )}
 
       {phase === 'answering' && data && (
-        <div>
-          <p>
-            Round {round} of {ROUNDS_PER_SESSION}
-          </p>
-          {lastCorrect !== null && <p>Last answer: {lastCorrect ? 'Correct' : 'Incorrect'}</p>}
-          <p>{content?.prompt}</p>
-          <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
+        <div className="flex-1 flex flex-col items-center justify-center gap-md">
+          {lastCorrect !== null && (
+            <p className={`font-label-bold text-label-bold ${lastCorrect ? 'text-primary' : 'text-error'}`}>
+              {lastCorrect ? 'Correct!' : 'Incorrect'}
+            </p>
+          )}
+          <p className="font-display text-headline-sm text-on-surface text-center">{content?.prompt}</p>
+          <div className="flex gap-md w-full">
             {data.categories.map((category) => (
-              <button key={category} onClick={() => submit(category)}>
+              <button
+                key={category}
+                type="button"
+                onClick={() => submit(category)}
+                className="flex-1 h-14 bg-surface-container-lowest border-2 border-surface-container-highest hover:border-primary rounded-xl font-label-bold text-label-bold text-on-surface transition-colors"
+              >
                 {category}
               </button>
             ))}
@@ -139,32 +163,20 @@ export default function SortItHarnessPage() {
       )}
 
       {phase === 'result' && result && (
-        <div>
-          <p>Session complete!</p>
-          <p>
-            Score: {result.score} | Accuracy: {result.accuracy}% | Speed: {result.speed}%
-          </p>
-          <p>+{xpAwarded} XP</p>
-          {leveledUp && user && (
-            <p>
-              Level up! You&apos;re now Level {user.level} — {calculateLevel(user.xp).name}
-            </p>
-          )}
-          {newAchievements.length > 0 && (
-            <p>New achievement{newAchievements.length > 1 ? 's' : ''}: {newAchievements.map((a) => a.name).join(', ')}</p>
-          )}
-          <button onClick={playAgain}>Play again</button>
+        <div className="flex-1 flex flex-col items-center justify-center py-md">
+          <GameResultCard
+            gameName="Sort It"
+            result={result}
+            xpAwarded={xpAwarded}
+            leveledUp={leveledUp}
+            levelName={level?.name}
+            levelNumber={level?.level}
+            newAchievements={newAchievements}
+            isPersonalBest={isPersonalBest}
+            onPlayAgain={playAgain}
+          />
         </div>
       )}
-
-      <h2>History</h2>
-      <ul>
-        {history.map((entry) => (
-          <li key={entry.sessionId}>
-            {entry.sessionId}: {entry.score} pts
-          </li>
-        ))}
-      </ul>
-    </main>
+    </GameShell>
   );
 }
