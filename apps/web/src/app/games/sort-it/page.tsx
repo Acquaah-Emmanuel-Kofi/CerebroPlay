@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { GameEngine } from '@cerebro-play/game-engine';
 import { sortItDefinition } from '@cerebro-play/games';
-import { calculateGameResult } from '@cerebro-play/scoring';
+import { calculateLevel } from '@cerebro-play/progression';
 import { getOrCreateGuestUser } from '@cerebro-play/user';
-import { GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
+import { Achievement, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
+import { completeGameSession } from '@/lib/complete-game-session';
 import { gameResultsStore } from '@/lib/game-results-store';
 
 const DIFFICULTY = 'easy';
@@ -32,6 +33,9 @@ export default function SortItHarnessPage() {
   const [result, setResult] = useState<GameResult | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [history, setHistory] = useState<GameResult[]>([]);
+  const [xpAwarded, setXpAwarded] = useState(0);
+  const [leveledUp, setLeveledUp] = useState(false);
+  const [newAchievements, setNewAchievements] = useState<Achievement[]>([]);
 
   useEffect(() => {
     getOrCreateGuestUser().then(setUser).catch(console.error);
@@ -62,18 +66,26 @@ export default function SortItHarnessPage() {
         roundRef.current += 1;
         setRound(roundRef.current);
       } else {
-        const gameResult = calculateGameResult({
-          sessionId: sessionIdRef.current,
-          skill: sortItDefinition.skill,
-          difficulty: DIFFICULTY,
-          attempts: attemptsRef.current,
-        });
-        setResult(gameResult);
-        gameResultsStore
-          .put(gameResult)
-          .then(() => setHistory((prev) => [...prev, gameResult]))
+        if (!user) return;
+        completeGameSession(
+          {
+            sessionId: sessionIdRef.current,
+            skill: sortItDefinition.skill,
+            difficulty: DIFFICULTY,
+            attempts: attemptsRef.current,
+          },
+          user,
+        )
+          .then(({ gameResult, updatedUser, xpAwarded: awarded, leveledUp: didLevelUp, newAchievements: earned }) => {
+            setResult(gameResult);
+            setUser(updatedUser);
+            setXpAwarded(awarded);
+            setLeveledUp(didLevelUp);
+            setNewAchievements(earned);
+            setHistory((prev) => [...prev, gameResult]);
+            setPhase('result');
+          })
           .catch(console.error);
-        setPhase('result');
       }
     });
 
@@ -92,6 +104,9 @@ export default function SortItHarnessPage() {
     setRound(0);
     setLastCorrect(null);
     setResult(null);
+    setXpAwarded(0);
+    setLeveledUp(false);
+    setNewAchievements([]);
     setPhase('idle');
   }
 
@@ -128,6 +143,15 @@ export default function SortItHarnessPage() {
           <p>
             Score: {result.score} | Accuracy: {result.accuracy}% | Speed: {result.speed}%
           </p>
+          <p>+{xpAwarded} XP</p>
+          {leveledUp && user && (
+            <p>
+              Level up! You&apos;re now Level {user.level} — {calculateLevel(user.xp).name}
+            </p>
+          )}
+          {newAchievements.length > 0 && (
+            <p>New achievement{newAchievements.length > 1 ? 's' : ''}: {newAchievements.map((a) => a.name).join(', ')}</p>
+          )}
           <button onClick={playAgain}>Play again</button>
         </div>
       )}

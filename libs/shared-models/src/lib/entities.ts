@@ -9,6 +9,9 @@ export interface User {
   trainingTimeMinutes?: number;
   xp: number;
   level: number;
+  streak: number;
+  lastPlayedDate?: string;
+  achievementIds: string[];
   createdAt: string;
 }
 
