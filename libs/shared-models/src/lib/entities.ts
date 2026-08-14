@@ -45,12 +45,14 @@ export interface GameSession {
 
 export interface GameResult {
   sessionId: string;
+  gameId?: string;
   score: number;
   accuracy: number;
   speed: number;
   difficulty: Difficulty;
   skill: CognitiveSkill;
   completed: boolean;
+  xpAwarded?: number;
 }
 
 export interface Achievement {

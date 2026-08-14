@@ -73,6 +73,7 @@ export default function FocusHarnessPage() {
         completeGameSession(
           {
             sessionId: sessionIdRef.current,
+            gameId: focusDefinition.id,
             skill: focusDefinition.skill,
             difficulty: DIFFICULTY,
             attempts: attemptsRef.current,

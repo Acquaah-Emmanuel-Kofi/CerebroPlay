@@ -5,16 +5,18 @@ import { calculateScore } from './score';
 
 export interface CalculateGameResultInput {
   sessionId: string;
+  gameId: string;
   skill: CognitiveSkill;
   difficulty: Difficulty;
   attempts: GameAttempt[];
 }
 
 export function calculateGameResult(input: CalculateGameResultInput): GameResult {
-  const { sessionId, skill, difficulty, attempts } = input;
+  const { sessionId, gameId, skill, difficulty, attempts } = input;
 
   return {
     sessionId,
+    gameId,
     skill,
     difficulty,
     score: calculateScore(attempts, difficulty),

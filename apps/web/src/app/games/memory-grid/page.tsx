@@ -53,7 +53,13 @@ export default function MemoryGridHarnessPage() {
       setAttempt(completedAttempt);
       if (!user) return;
       completeGameSession(
-        { sessionId, skill: memoryGridDefinition.skill, difficulty: DIFFICULTY, attempts: [completedAttempt] },
+        {
+          sessionId,
+          gameId: memoryGridDefinition.id,
+          skill: memoryGridDefinition.skill,
+          difficulty: DIFFICULTY,
+          attempts: [completedAttempt],
+        },
         user,
       )
         .then(({ gameResult, updatedUser, xpAwarded: awarded, leveledUp: didLevelUp, newAchievements: earned }) => {

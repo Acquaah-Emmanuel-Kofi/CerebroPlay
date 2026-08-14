@@ -47,7 +47,13 @@ export default function RapidRecallHarnessPage() {
       setAttempt(completedAttempt);
       if (!user) return;
       completeGameSession(
-        { sessionId, skill: rapidRecallDefinition.skill, difficulty: DIFFICULTY, attempts: [completedAttempt] },
+        {
+          sessionId,
+          gameId: rapidRecallDefinition.id,
+          skill: rapidRecallDefinition.skill,
+          difficulty: DIFFICULTY,
+          attempts: [completedAttempt],
+        },
         user,
       )
         .then(({ gameResult, updatedUser, xpAwarded: awarded, leveledUp: didLevelUp, newAchievements: earned }) => {

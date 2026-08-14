@@ -15,6 +15,7 @@ export interface ApplyGameResultOutput {
   xpAwarded: number;
   leveledUp: boolean;
   newAchievements: Achievement[];
+  isPersonalBest: boolean;
 }
 
 function isPersonalBest(result: GameResult, history: GameResult[]): boolean {
@@ -25,7 +26,8 @@ function isPersonalBest(result: GameResult, history: GameResult[]): boolean {
 }
 
 export function applyGameResultToUser({ user, result, history }: ApplyGameResultInput): ApplyGameResultOutput {
-  const xpAwarded = calculateXpAward({ result, isPersonalBest: isPersonalBest(result, history) });
+  const personalBest = isPersonalBest(result, history);
+  const xpAwarded = calculateXpAward({ result, isPersonalBest: personalBest });
   const newXp = user.xp + xpAwarded;
 
   const previousLevel = calculateLevel(user.xp).level;
@@ -45,5 +47,5 @@ export function applyGameResultToUser({ user, result, history }: ApplyGameResult
     achievementIds: [...user.achievementIds, ...newAchievements.map((achievement) => achievement.id)],
   };
 
-  return { user: updatedUser, xpAwarded, leveledUp, newAchievements };
+  return { user: updatedUser, xpAwarded, leveledUp, newAchievements, isPersonalBest: personalBest };
 }

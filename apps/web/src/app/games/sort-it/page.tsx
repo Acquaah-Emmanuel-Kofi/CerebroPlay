@@ -70,6 +70,7 @@ export default function SortItHarnessPage() {
         completeGameSession(
           {
             sessionId: sessionIdRef.current,
+            gameId: sortItDefinition.id,
             skill: sortItDefinition.skill,
             difficulty: DIFFICULTY,
             attempts: attemptsRef.current,

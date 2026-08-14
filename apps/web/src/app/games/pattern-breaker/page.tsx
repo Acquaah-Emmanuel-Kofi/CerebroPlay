@@ -45,7 +45,13 @@ export default function PatternBreakerHarnessPage() {
       setAttempt(completedAttempt);
       if (!user) return;
       completeGameSession(
-        { sessionId, skill: patternBreakerDefinition.skill, difficulty: DIFFICULTY, attempts: [completedAttempt] },
+        {
+          sessionId,
+          gameId: patternBreakerDefinition.id,
+          skill: patternBreakerDefinition.skill,
+          difficulty: DIFFICULTY,
+          attempts: [completedAttempt],
+        },
         user,
       )
         .then(({ gameResult, updatedUser, xpAwarded: awarded, leveledUp: didLevelUp, newAchievements: earned }) => {

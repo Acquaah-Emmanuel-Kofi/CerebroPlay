@@ -86,7 +86,13 @@ export default function SpotTheDifferenceHarnessPage() {
       setAttempt(completedAttempt);
       if (!user) return;
       completeGameSession(
-        { sessionId, skill: spotTheDifferenceDefinition.skill, difficulty: DIFFICULTY, attempts: [completedAttempt] },
+        {
+          sessionId,
+          gameId: spotTheDifferenceDefinition.id,
+          skill: spotTheDifferenceDefinition.skill,
+          difficulty: DIFFICULTY,
+          attempts: [completedAttempt],
+        },
         user,
       )
         .then(({ gameResult, updatedUser, xpAwarded: awarded, leveledUp: didLevelUp, newAchievements: earned }) => {
