@@ -4,6 +4,7 @@ import { patternBreakerDefinition } from './pattern-breaker/pattern-breaker.defi
 import { memoryGridDefinition } from './memory-grid/memory-grid.definition';
 import { spotTheDifferenceDefinition } from './spot-the-difference/spot-the-difference.definition';
 import { sortItDefinition } from './sort-it/sort-it.definition';
+import { focusDefinition } from './focus/focus.definition';
 
 export const gameCatalog: Game[] = [
   {
@@ -36,6 +37,12 @@ export const gameCatalog: Game[] = [
     type: sortItDefinition.type,
     skill: sortItDefinition.skill,
   },
+  {
+    id: focusDefinition.id,
+    name: 'Focus',
+    type: focusDefinition.type,
+    skill: focusDefinition.skill,
+  },
 ];
 
 export const gameDefinitionsById: Record<string, GameDefinition> = {
@@ -44,4 +51,5 @@ export const gameDefinitionsById: Record<string, GameDefinition> = {
   [memoryGridDefinition.id]: memoryGridDefinition,
   [spotTheDifferenceDefinition.id]: spotTheDifferenceDefinition,
   [sortItDefinition.id]: sortItDefinition,
+  [focusDefinition.id]: focusDefinition,
 };

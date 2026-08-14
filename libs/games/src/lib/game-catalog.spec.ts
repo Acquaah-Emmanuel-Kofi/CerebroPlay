@@ -3,10 +3,11 @@ import { patternBreakerDefinition } from './pattern-breaker/pattern-breaker.defi
 import { memoryGridDefinition } from './memory-grid/memory-grid.definition';
 import { spotTheDifferenceDefinition } from './spot-the-difference/spot-the-difference.definition';
 import { sortItDefinition } from './sort-it/sort-it.definition';
+import { focusDefinition } from './focus/focus.definition';
 import { gameCatalog, gameDefinitionsById } from './game-catalog';
 
 describe('gameCatalog', () => {
-  it('contains all five implemented games with the right id/type/skill', () => {
+  it('contains all six MVP games with the right id/type/skill', () => {
     expect(gameCatalog).toEqual([
       {
         id: 'rapid-recall',
@@ -38,6 +39,12 @@ describe('gameCatalog', () => {
         type: sortItDefinition.type,
         skill: sortItDefinition.skill,
       },
+      {
+        id: 'focus',
+        name: 'Focus',
+        type: focusDefinition.type,
+        skill: focusDefinition.skill,
+      },
     ]);
   });
 });
@@ -61,5 +68,9 @@ describe('gameDefinitionsById', () => {
 
   it('maps sort-it to the same sortItDefinition object', () => {
     expect(gameDefinitionsById['sort-it']).toBe(sortItDefinition);
+  });
+
+  it('maps focus to the same focusDefinition object', () => {
+    expect(gameDefinitionsById['focus']).toBe(focusDefinition);
   });
 });
