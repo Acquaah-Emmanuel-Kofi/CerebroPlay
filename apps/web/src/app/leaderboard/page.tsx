@@ -49,7 +49,7 @@ export default function LeaderboardPage() {
                 title="Available once accounts launch"
                 className="bg-surface-container text-outline-variant px-md py-sm rounded-full font-label-md text-label-md whitespace-nowrap flex items-center gap-1 cursor-default"
               >
-                <span className="material-symbols-outlined text-[16px]">lock</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-[16px]">lock</span>
                 {tab}
               </span>
             ))}
@@ -59,7 +59,7 @@ export default function LeaderboardPage() {
         <section className="bg-primary-container text-on-primary-container rounded-xl p-md flex items-center justify-between shadow-[0_12px_32px_rgba(65,42,231,0.2)]">
           <div className="flex items-center gap-md">
             <div className="w-12 h-12 rounded-full bg-surface/20 flex items-center justify-center">
-              <span className="material-symbols-outlined filled">person</span>
+              <span aria-hidden="true" className="material-symbols-outlined filled">person</span>
             </div>
             <div>
               <div className="font-label-bold text-label-bold">You</div>
@@ -85,7 +85,7 @@ export default function LeaderboardPage() {
             >
               <div className="flex items-center gap-md">
                 <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
-                  <span className="material-symbols-outlined text-primary text-[20px]">
+                  <span aria-hidden="true" className="material-symbols-outlined text-primary text-[20px]">
                     {GAME_ICONS[game.id] ?? 'extension'}
                   </span>
                 </div>

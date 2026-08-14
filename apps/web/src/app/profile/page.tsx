@@ -64,7 +64,7 @@ export default function ProfilePage() {
       <main className="w-full max-w-content mx-auto px-margin-mobile pt-sm md:pt-lg pb-lg flex flex-col gap-lg">
         <section className="flex items-center gap-md">
           <div className="w-16 h-16 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center">
-            <span className="material-symbols-outlined filled text-3xl">person</span>
+            <span aria-hidden="true" className="material-symbols-outlined filled text-3xl">person</span>
           </div>
           <div>
             <h1 className="font-display text-headline-md text-on-surface">Guest Player</h1>
@@ -124,6 +124,7 @@ export default function ProfilePage() {
                   }`}
                 >
                   <span
+                    aria-hidden="true"
                     className={`material-symbols-outlined text-2xl ${earned ? 'filled text-secondary' : 'text-outline-variant'}`}
                   >
                     {ACHIEVEMENT_ICONS[achievement.id] ?? 'emoji_events'}

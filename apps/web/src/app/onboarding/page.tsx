@@ -104,7 +104,7 @@ export default function OnboardingPage() {
             className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high active:scale-95 transition-all text-on-surface-variant disabled:opacity-0"
             aria-label="Back"
           >
-            <span className="material-symbols-outlined">arrow_back</span>
+            <span aria-hidden="true" className="material-symbols-outlined">arrow_back</span>
           </button>
           <div className="flex items-center gap-base">
             {STEP_ORDER.map((s, index) => (
@@ -179,7 +179,7 @@ export default function OnboardingPage() {
             className="w-full h-14 rounded-full bg-primary text-on-primary font-label-bold text-label-bold shadow-[0_12px_24px_rgba(65,42,231,0.25)] hover:shadow-[0_16px_32px_rgba(65,42,231,0.35)] active:scale-[0.96] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-sm"
           >
             {step === 'welcome' ? 'Start Training' : step === 'time' ? 'Finish' : 'Next'}
-            <span className="material-symbols-outlined">arrow_forward</span>
+            <span aria-hidden="true" className="material-symbols-outlined">arrow_forward</span>
           </button>
         </div>
       </div>
@@ -214,7 +214,7 @@ function OptionRow({
           selected ? 'bg-primary text-on-primary' : 'bg-surface-container-lowest text-primary'
         }`}
       >
-        <span className="material-symbols-outlined filled">{icon}</span>
+        <span aria-hidden="true" className="material-symbols-outlined filled">{icon}</span>
       </div>
       <div className="flex-1">
         <h3 className="font-label-bold text-label-bold text-on-surface">{label}</h3>
@@ -225,7 +225,7 @@ function OptionRow({
           selected ? 'bg-primary border-primary' : 'border-outline-variant'
         }`}
       >
-        {selected && <span className="material-symbols-outlined text-on-primary text-[16px] font-bold">check</span>}
+        {selected && <span aria-hidden="true" className="material-symbols-outlined text-on-primary text-[16px] font-bold">check</span>}
       </div>
     </button>
   );

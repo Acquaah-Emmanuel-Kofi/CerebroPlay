@@ -34,7 +34,7 @@ export function AccountModal({ open, onClose }: AccountModalProps) {
         <div className="flex flex-col gap-sm">
           {BENEFITS.map((benefit) => (
             <div key={benefit.title} className="flex items-center gap-sm">
-              <span className="material-symbols-outlined text-primary bg-primary/10 rounded-full p-xs">
+              <span aria-hidden="true" className="material-symbols-outlined text-primary bg-primary/10 rounded-full p-xs">
                 {benefit.icon}
               </span>
               <div>

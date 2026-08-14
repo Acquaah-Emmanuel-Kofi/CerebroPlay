@@ -29,7 +29,7 @@ export function AppShell({ children, streak }: AppShellProps) {
     <div className="min-h-screen bg-surface text-on-surface font-body flex flex-col md:flex-row pb-24 md:pb-0">
       <nav className="hidden md:flex flex-col w-64 bg-surface-container-lowest h-screen fixed left-0 top-0 shadow-[0_12px_32px_rgba(65,42,231,0.08)] z-40">
         <div className="p-lg flex items-center gap-sm">
-          <span className="material-symbols-outlined filled text-primary text-3xl">psychology</span>
+          <span aria-hidden="true" className="material-symbols-outlined filled text-primary text-3xl">psychology</span>
           <span className="font-display text-headline-md text-primary">CerebroPlay</span>
         </div>
         <div className="flex flex-col px-md gap-sm mt-md">
@@ -43,11 +43,11 @@ export function AppShell({ children, streak }: AppShellProps) {
         {typeof streak === 'number' && (
           <header className="md:hidden flex justify-between items-center w-full max-w-content mx-auto px-margin-mobile py-sm">
             <div className="flex items-center gap-xs">
-              <span className="material-symbols-outlined filled text-primary text-2xl">psychology</span>
+              <span aria-hidden="true" className="material-symbols-outlined filled text-primary text-2xl">psychology</span>
               <span className="font-display text-display-lg-mobile text-primary font-bold">CerebroPlay</span>
             </div>
             <div className="flex items-center gap-xs bg-secondary-fixed/20 px-sm py-xs rounded-full">
-              <span className="material-symbols-outlined filled text-secondary-container text-lg">
+              <span aria-hidden="true" className="material-symbols-outlined filled text-secondary-container text-lg">
                 local_fire_department
               </span>
               <span className="font-label-bold text-label-bold text-secondary-container">{streak}</span>
@@ -81,14 +81,14 @@ function DesktopNavLink({ item, active }: { item: NavItem; active: boolean }) {
         className="flex items-center gap-sm px-md py-sm rounded-full text-outline-variant font-label-md text-label-md cursor-default"
         title="Coming soon"
       >
-        <span className="material-symbols-outlined">{item.icon}</span> {item.label}
+        <span aria-hidden="true" className="material-symbols-outlined">{item.icon}</span> {item.label}
       </div>
     );
   }
 
   return (
     <Link href={item.href} className={className}>
-      <span className={`material-symbols-outlined ${active ? 'filled' : ''}`}>{item.icon}</span> {item.label}
+      <span aria-hidden="true" className={`material-symbols-outlined ${active ? 'filled' : ''}`}>{item.icon}</span> {item.label}
     </Link>
   );
 }
@@ -100,7 +100,7 @@ function MobileNavLink({ item, active }: { item: NavItem; active: boolean }) {
         className="flex flex-col items-center justify-center text-outline-variant px-4 py-1"
         title="Coming soon"
       >
-        <span className="material-symbols-outlined text-xl">{item.icon}</span>
+        <span aria-hidden="true" className="material-symbols-outlined text-xl">{item.icon}</span>
         <span className="font-label-md text-[10px] mt-1">{item.label}</span>
       </div>
     );
@@ -112,7 +112,7 @@ function MobileNavLink({ item, active }: { item: NavItem; active: boolean }) {
 
   return (
     <Link href={item.href} className={className}>
-      <span className={`material-symbols-outlined text-xl ${active ? 'filled' : ''}`}>{item.icon}</span>
+      <span aria-hidden="true" className={`material-symbols-outlined text-xl ${active ? 'filled' : ''}`}>{item.icon}</span>
       <span className="font-label-md text-[10px] mt-1">{item.label}</span>
     </Link>
   );

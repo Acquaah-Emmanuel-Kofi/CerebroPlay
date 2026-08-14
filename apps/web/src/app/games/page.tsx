@@ -53,7 +53,7 @@ export default function GameLibraryPage() {
               className="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_16px_rgba(65,42,231,0.06)] active:scale-[0.98] transition-all flex flex-col gap-sm group"
             >
               <div className="bg-surface-container-low w-12 h-12 rounded-xl flex items-center justify-center group-hover:bg-primary-container transition-colors">
-                <span className="material-symbols-outlined text-primary text-[28px]">
+                <span aria-hidden="true" className="material-symbols-outlined text-primary text-[28px]">
                   {GAME_ICONS[game.id] ?? 'extension'}
                 </span>
               </div>

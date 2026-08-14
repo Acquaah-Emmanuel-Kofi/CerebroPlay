@@ -65,7 +65,7 @@ export default function HomePage() {
           </div>
           {typeof user?.streak === 'number' && (
             <div className="hidden md:flex items-center gap-xs bg-secondary-fixed/20 px-md py-sm rounded-full">
-              <span className="material-symbols-outlined filled text-secondary-container text-2xl">
+              <span aria-hidden="true" className="material-symbols-outlined filled text-secondary-container text-2xl">
                 local_fire_department
               </span>
               <span className="font-display text-headline-sm text-secondary-container font-bold">
@@ -92,7 +92,7 @@ export default function HomePage() {
               href={`/games/${recommendedGame.id}`}
               className="w-full h-14 bg-primary text-on-primary rounded-full font-label-bold text-label-bold flex items-center justify-center gap-sm active:scale-[0.98] transition-all duration-200 shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30"
             >
-              Start Training <span className="material-symbols-outlined">arrow_forward</span>
+              Start Training <span aria-hidden="true" className="material-symbols-outlined">arrow_forward</span>
             </Link>
           </div>
         </section>
@@ -102,7 +102,7 @@ export default function HomePage() {
             <div className="flex justify-between items-start">
               <h3 className="font-display text-headline-sm text-on-surface">XP</h3>
               <div className="bg-surface-container-high p-xs rounded-full">
-                <span className="material-symbols-outlined text-primary text-xl">monitoring</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-primary text-xl">monitoring</span>
               </div>
             </div>
             <div className="mt-md flex items-baseline gap-sm">
@@ -125,7 +125,7 @@ export default function HomePage() {
           >
             <div>
               <div className="flex items-center gap-xs mb-sm">
-                <span className="material-symbols-outlined filled text-secondary-fixed text-xl">workspace_premium</span>
+                <span aria-hidden="true" className="material-symbols-outlined filled text-secondary-fixed text-xl">workspace_premium</span>
                 <span className="font-label-bold text-label-bold text-secondary-fixed uppercase tracking-wider text-xs">
                   {strongestEntry ? 'Strongest Skill' : 'Brain Profile'}
                 </span>
@@ -136,7 +136,7 @@ export default function HomePage() {
             </div>
             <div className="mt-lg bg-surface/10 rounded-xl p-sm border border-surface/20 flex items-center justify-between">
               <p className="font-label-bold text-label-bold text-on-primary-container">View full profile</p>
-              <span className="material-symbols-outlined text-on-primary-container bg-surface/20 p-xs rounded-full">
+              <span aria-hidden="true" className="material-symbols-outlined text-on-primary-container bg-surface/20 p-xs rounded-full">
                 arrow_forward
               </span>
             </div>

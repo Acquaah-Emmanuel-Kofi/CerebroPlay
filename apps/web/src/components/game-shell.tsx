@@ -16,7 +16,7 @@ export function GameShell({ gameName, headerRight, children }: GameShellProps) {
             className="flex items-center justify-center w-10 h-10 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors"
             aria-label="Exit game"
           >
-            <span className="material-symbols-outlined text-on-surface-variant">close</span>
+            <span aria-hidden="true" className="material-symbols-outlined text-on-surface-variant">close</span>
           </Link>
           <h1 className="font-display text-headline-sm text-on-surface">{gameName}</h1>
           <div className="w-10 h-10 flex items-center justify-end">{headerRight}</div>
