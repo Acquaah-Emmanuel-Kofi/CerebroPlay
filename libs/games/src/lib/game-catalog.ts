@@ -2,6 +2,7 @@ import { Game, GameDefinition } from '@cerebro-play/shared-models';
 import { rapidRecallDefinition } from './rapid-recall/rapid-recall.definition';
 import { patternBreakerDefinition } from './pattern-breaker/pattern-breaker.definition';
 import { memoryGridDefinition } from './memory-grid/memory-grid.definition';
+import { spotTheDifferenceDefinition } from './spot-the-difference/spot-the-difference.definition';
 
 export const gameCatalog: Game[] = [
   {
@@ -22,10 +23,17 @@ export const gameCatalog: Game[] = [
     type: memoryGridDefinition.type,
     skill: memoryGridDefinition.skill,
   },
+  {
+    id: spotTheDifferenceDefinition.id,
+    name: 'Spot the Difference',
+    type: spotTheDifferenceDefinition.type,
+    skill: spotTheDifferenceDefinition.skill,
+  },
 ];
 
 export const gameDefinitionsById: Record<string, GameDefinition> = {
   [rapidRecallDefinition.id]: rapidRecallDefinition,
   [patternBreakerDefinition.id]: patternBreakerDefinition,
   [memoryGridDefinition.id]: memoryGridDefinition,
+  [spotTheDifferenceDefinition.id]: spotTheDifferenceDefinition,
 };
