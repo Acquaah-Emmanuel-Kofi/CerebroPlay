@@ -6,6 +6,8 @@ export * from './lib/memory-grid/memory-grid.definition';
 export * from './lib/memory-grid/memory-grid.generator';
 export * from './lib/spot-the-difference/spot-the-difference.definition';
 export * from './lib/spot-the-difference/spot-the-difference.generator';
+export * from './lib/sort-it/sort-it.definition';
+export * from './lib/sort-it/sort-it.generator';
 export * from './lib/equality-validator';
 export * from './lib/set-equality-validator';
 export * from './lib/game-catalog';

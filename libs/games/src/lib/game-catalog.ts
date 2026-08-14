@@ -3,6 +3,7 @@ import { rapidRecallDefinition } from './rapid-recall/rapid-recall.definition';
 import { patternBreakerDefinition } from './pattern-breaker/pattern-breaker.definition';
 import { memoryGridDefinition } from './memory-grid/memory-grid.definition';
 import { spotTheDifferenceDefinition } from './spot-the-difference/spot-the-difference.definition';
+import { sortItDefinition } from './sort-it/sort-it.definition';
 
 export const gameCatalog: Game[] = [
   {
@@ -29,6 +30,12 @@ export const gameCatalog: Game[] = [
     type: spotTheDifferenceDefinition.type,
     skill: spotTheDifferenceDefinition.skill,
   },
+  {
+    id: sortItDefinition.id,
+    name: 'Sort It',
+    type: sortItDefinition.type,
+    skill: sortItDefinition.skill,
+  },
 ];
 
 export const gameDefinitionsById: Record<string, GameDefinition> = {
@@ -36,4 +43,5 @@ export const gameDefinitionsById: Record<string, GameDefinition> = {
   [patternBreakerDefinition.id]: patternBreakerDefinition,
   [memoryGridDefinition.id]: memoryGridDefinition,
   [spotTheDifferenceDefinition.id]: spotTheDifferenceDefinition,
+  [sortItDefinition.id]: sortItDefinition,
 };

@@ -2,10 +2,11 @@ import { rapidRecallDefinition } from './rapid-recall/rapid-recall.definition';
 import { patternBreakerDefinition } from './pattern-breaker/pattern-breaker.definition';
 import { memoryGridDefinition } from './memory-grid/memory-grid.definition';
 import { spotTheDifferenceDefinition } from './spot-the-difference/spot-the-difference.definition';
+import { sortItDefinition } from './sort-it/sort-it.definition';
 import { gameCatalog, gameDefinitionsById } from './game-catalog';
 
 describe('gameCatalog', () => {
-  it('contains all four implemented games with the right id/type/skill', () => {
+  it('contains all five implemented games with the right id/type/skill', () => {
     expect(gameCatalog).toEqual([
       {
         id: 'rapid-recall',
@@ -31,6 +32,12 @@ describe('gameCatalog', () => {
         type: spotTheDifferenceDefinition.type,
         skill: spotTheDifferenceDefinition.skill,
       },
+      {
+        id: 'sort-it',
+        name: 'Sort It',
+        type: sortItDefinition.type,
+        skill: sortItDefinition.skill,
+      },
     ]);
   });
 });
@@ -50,5 +57,9 @@ describe('gameDefinitionsById', () => {
 
   it('maps spot-the-difference to the same spotTheDifferenceDefinition object', () => {
     expect(gameDefinitionsById['spot-the-difference']).toBe(spotTheDifferenceDefinition);
+  });
+
+  it('maps sort-it to the same sortItDefinition object', () => {
+    expect(gameDefinitionsById['sort-it']).toBe(sortItDefinition);
   });
 });
