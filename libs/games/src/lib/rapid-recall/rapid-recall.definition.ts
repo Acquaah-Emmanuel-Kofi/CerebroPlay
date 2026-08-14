@@ -1,6 +1,6 @@
 ﻿import { GameDefinition } from '@cerebro-play/shared-models';
+import { equalityValidator } from '../equality-validator';
 import { rapidRecallGenerator } from './rapid-recall.generator';
-import { rapidRecallValidator } from './rapid-recall.validator';
 
 export const rapidRecallDefinition: GameDefinition = {
   id: 'rapid-recall',
@@ -13,6 +13,6 @@ export const rapidRecallDefinition: GameDefinition = {
     { difficulty: 'expert' },
   ],
   generator: rapidRecallGenerator,
-  validator: rapidRecallValidator,
+  validator: equalityValidator,
   roleThemes: ['general', 'software', 'design', 'finance', 'marketing'],
 };

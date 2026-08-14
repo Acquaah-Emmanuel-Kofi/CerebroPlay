@@ -1,5 +1,6 @@
 import { Game, GameDefinition } from '@cerebro-play/shared-models';
 import { rapidRecallDefinition } from './rapid-recall/rapid-recall.definition';
+import { patternBreakerDefinition } from './pattern-breaker/pattern-breaker.definition';
 
 export const gameCatalog: Game[] = [
   {
@@ -8,8 +9,15 @@ export const gameCatalog: Game[] = [
     type: rapidRecallDefinition.type,
     skill: rapidRecallDefinition.skill,
   },
+  {
+    id: patternBreakerDefinition.id,
+    name: 'Pattern Breaker',
+    type: patternBreakerDefinition.type,
+    skill: patternBreakerDefinition.skill,
+  },
 ];
 
 export const gameDefinitionsById: Record<string, GameDefinition> = {
   [rapidRecallDefinition.id]: rapidRecallDefinition,
+  [patternBreakerDefinition.id]: patternBreakerDefinition,
 };
