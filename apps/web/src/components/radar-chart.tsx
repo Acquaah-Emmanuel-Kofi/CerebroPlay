@@ -12,7 +12,7 @@ const RINGS = [0.25, 0.5, 0.75, 1];
 
 export function RadarChart({ axes, size = 240 }: RadarChartProps) {
   const center = size / 2;
-  const maxRadius = size / 2 - 28;
+  const maxRadius = size / 2 - 48;
 
   function pointFor(index: number, fraction: number) {
     const angle = (Math.PI * 2 * index) / axes.length - Math.PI / 2;
@@ -58,7 +58,8 @@ export function RadarChart({ axes, size = 240 }: RadarChartProps) {
         <circle key={axes[i].label} cx={p.x} cy={p.y} r={3} fill="var(--color-primary)" />
       ))}
       {axes.map((axis, i) => {
-        const labelPoint = pointFor(i, 1.22);
+        const labelPoint = pointFor(i, 1.3);
+        const words = axis.label.split(' ');
         return (
           <text
             key={axis.label}
@@ -69,7 +70,11 @@ export function RadarChart({ axes, size = 240 }: RadarChartProps) {
             fontSize={11}
             fill="var(--color-on-surface-variant)"
           >
-            {axis.label}
+            {words.map((word, wordIndex) => (
+              <tspan key={word} x={labelPoint.x} dy={wordIndex === 0 ? -((words.length - 1) * 6) : 12}>
+                {word}
+              </tspan>
+            ))}
           </text>
         );
       })}

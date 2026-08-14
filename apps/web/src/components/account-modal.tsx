@@ -16,7 +16,7 @@ export function AccountModal({ open, onClose }: AccountModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-inverse-surface/40"
+      className="fixed inset-0 z-100 flex items-end justify-center bg-inverse-surface/40"
       onClick={onClose}
       data-testid="account-modal-backdrop"
     >

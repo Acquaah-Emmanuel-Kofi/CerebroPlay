@@ -17,13 +17,16 @@ export async function completeGameSession(
   scoringInput: CalculateGameResultInput,
   user: User,
 ): Promise<CompleteGameSessionResult> {
-  const history = await gameResultsStore.getAll();
+  const previousHistory = await gameResultsStore.getAll();
   const gameResult = calculateGameResult(scoringInput);
+  // Achievement checks (e.g. history.length === 1 for "first challenge") expect history to
+  // already include the result being scored, so include it here rather than after persisting.
+  const historyIncludingCurrent = [...previousHistory, gameResult];
 
   const { user: updatedUser, xpAwarded, leveledUp, newAchievements, isPersonalBest } = applyGameResultToUser({
     user,
     result: gameResult,
-    history,
+    history: historyIncludingCurrent,
   });
 
   const enrichedResult: GameResult = { ...gameResult, xpAwarded };
