@@ -1,9 +1,10 @@
 import { rapidRecallDefinition } from './rapid-recall/rapid-recall.definition';
 import { patternBreakerDefinition } from './pattern-breaker/pattern-breaker.definition';
+import { memoryGridDefinition } from './memory-grid/memory-grid.definition';
 import { gameCatalog, gameDefinitionsById } from './game-catalog';
 
 describe('gameCatalog', () => {
-  it('contains the Rapid Recall and Pattern Breaker entries with the right id/type/skill', () => {
+  it('contains the Rapid Recall, Pattern Breaker, and Memory Grid entries with the right id/type/skill', () => {
     expect(gameCatalog).toEqual([
       {
         id: 'rapid-recall',
@@ -17,6 +18,12 @@ describe('gameCatalog', () => {
         type: patternBreakerDefinition.type,
         skill: patternBreakerDefinition.skill,
       },
+      {
+        id: 'memory-grid',
+        name: 'Memory Grid',
+        type: memoryGridDefinition.type,
+        skill: memoryGridDefinition.skill,
+      },
     ]);
   });
 });
@@ -28,5 +35,9 @@ describe('gameDefinitionsById', () => {
 
   it('maps pattern-breaker to the same patternBreakerDefinition object', () => {
     expect(gameDefinitionsById['pattern-breaker']).toBe(patternBreakerDefinition);
+  });
+
+  it('maps memory-grid to the same memoryGridDefinition object', () => {
+    expect(gameDefinitionsById['memory-grid']).toBe(memoryGridDefinition);
   });
 });

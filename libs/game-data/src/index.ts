@@ -7,3 +7,4 @@ export * from './lib/roles/design/rapid-recall';
 export * from './lib/roles/finance/rapid-recall';
 export * from './lib/roles/marketing/rapid-recall';
 export * from './lib/pattern-breaker';
+export * from './lib/memory-grid';

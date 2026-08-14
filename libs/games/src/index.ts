@@ -2,5 +2,8 @@ export * from './lib/rapid-recall/rapid-recall.definition';
 export * from './lib/rapid-recall/rapid-recall.generator';
 export * from './lib/pattern-breaker/pattern-breaker.definition';
 export * from './lib/pattern-breaker/pattern-breaker.generator';
+export * from './lib/memory-grid/memory-grid.definition';
+export * from './lib/memory-grid/memory-grid.generator';
 export * from './lib/equality-validator';
+export * from './lib/set-equality-validator';
 export * from './lib/game-catalog';
