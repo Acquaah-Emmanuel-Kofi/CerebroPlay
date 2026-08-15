@@ -17,7 +17,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { href: '/home', label: 'Home', icon: 'home' },
   { href: '/games', label: 'Games', icon: 'extension' },
-  { href: null, label: 'Challenge', icon: 'emoji_events' },
+  { href: '/challenge', label: 'Challenge', icon: 'emoji_events' },
   { href: '/leaderboard', label: 'Leaderboard', icon: 'leaderboard' },
   { href: '/profile', label: 'Profile', icon: 'person' },
 ];

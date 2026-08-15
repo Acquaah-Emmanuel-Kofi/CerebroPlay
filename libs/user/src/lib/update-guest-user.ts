@@ -13,6 +13,7 @@ export type GuestUserUpdates = Partial<
     | 'streak'
     | 'lastPlayedDate'
     | 'achievementIds'
+    | 'dailyChallengeCompletedDate'
   >
 >;
 

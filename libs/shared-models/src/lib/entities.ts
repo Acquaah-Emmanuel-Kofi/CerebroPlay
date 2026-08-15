@@ -12,6 +12,7 @@ export interface User {
   streak: number;
   lastPlayedDate?: string;
   achievementIds: string[];
+  dailyChallengeCompletedDate?: string;
   createdAt: string;
 }
 
@@ -53,6 +54,7 @@ export interface GameResult {
   skill: CognitiveSkill;
   completed: boolean;
   xpAwarded?: number;
+  completedAt?: string;
 }
 
 export interface Achievement {

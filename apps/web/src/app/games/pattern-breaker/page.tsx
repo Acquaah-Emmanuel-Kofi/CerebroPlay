@@ -26,6 +26,8 @@ export default function PatternBreakerHarnessPage() {
   const [leveledUp, setLeveledUp] = useState(false);
   const [newAchievements, setNewAchievements] = useState<Achievement[]>([]);
   const [isPersonalBest, setIsPersonalBest] = useState(false);
+  const [dailyChallengeCompletedNow, setDailyChallengeCompletedNow] = useState(false);
+  const [dailyChallengeBonusXp, setDailyChallengeBonusXp] = useState(0);
 
   useEffect(() => {
     getOrCreateGuestUser().then(setUser).catch(console.error);
@@ -48,15 +50,28 @@ export default function PatternBreakerHarnessPage() {
         { sessionId, gameId: patternBreakerDefinition.id, skill: patternBreakerDefinition.skill, difficulty: DIFFICULTY, attempts: [completedAttempt] },
         user,
       )
-        .then(({ gameResult, updatedUser, xpAwarded: awarded, leveledUp: didLevelUp, newAchievements: earned, isPersonalBest: personalBest }) => {
-          setResult(gameResult);
-          setUser(updatedUser);
-          setXpAwarded(awarded);
-          setLeveledUp(didLevelUp);
-          setNewAchievements(earned);
-          setIsPersonalBest(personalBest);
-          setPhase('result');
-        })
+        .then(
+          ({
+            gameResult,
+            updatedUser,
+            xpAwarded: awarded,
+            leveledUp: didLevelUp,
+            newAchievements: earned,
+            isPersonalBest: personalBest,
+            dailyChallengeCompletedNow: challengeCompleted,
+            dailyChallengeBonusXp: bonusXp,
+          }) => {
+            setResult(gameResult);
+            setUser(updatedUser);
+            setXpAwarded(awarded);
+            setLeveledUp(didLevelUp);
+            setNewAchievements(earned);
+            setIsPersonalBest(personalBest);
+            setDailyChallengeCompletedNow(challengeCompleted);
+            setDailyChallengeBonusXp(bonusXp);
+            setPhase('result');
+          },
+        )
         .catch(console.error);
     });
 
@@ -77,6 +92,8 @@ export default function PatternBreakerHarnessPage() {
     setLeveledUp(false);
     setNewAchievements([]);
     setIsPersonalBest(false);
+    setDailyChallengeCompletedNow(false);
+    setDailyChallengeBonusXp(0);
     setPhase('idle');
   }
 
@@ -132,6 +149,8 @@ export default function PatternBreakerHarnessPage() {
             levelNumber={level?.level}
             newAchievements={newAchievements}
             isPersonalBest={isPersonalBest}
+            dailyChallengeCompletedNow={dailyChallengeCompletedNow}
+            dailyChallengeBonusXp={dailyChallengeBonusXp}
             onPlayAgain={playAgain}
           />
         </div>
