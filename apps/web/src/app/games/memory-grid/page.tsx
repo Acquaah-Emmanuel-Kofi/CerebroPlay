@@ -7,7 +7,8 @@ import { calculateLevel } from '@cerebro-play/progression';
 import { getOrCreateGuestUser } from '@cerebro-play/user';
 import { Achievement, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
 import { completeGameSession } from '@/lib/complete-game-session';
-import { gameResultsStore } from '@/lib/game-results-store';
+import { GameShell } from '@/components/game-shell';
+import { GameResultCard } from '@/components/game-result-card';
 
 const MEMORIZE_DURATION_MS = 4000;
 const DIFFICULTY = 'easy';
@@ -27,14 +28,13 @@ export default function MemoryGridHarnessPage() {
   const [attempt, setAttempt] = useState<GameAttempt | null>(null);
   const [result, setResult] = useState<GameResult | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [history, setHistory] = useState<GameResult[]>([]);
   const [xpAwarded, setXpAwarded] = useState(0);
   const [leveledUp, setLeveledUp] = useState(false);
   const [newAchievements, setNewAchievements] = useState<Achievement[]>([]);
+  const [isPersonalBest, setIsPersonalBest] = useState(false);
 
   useEffect(() => {
     getOrCreateGuestUser().then(setUser).catch(console.error);
-    gameResultsStore.getAll().then(setHistory).catch(console.error);
   }, []);
 
   function start() {
@@ -53,16 +53,16 @@ export default function MemoryGridHarnessPage() {
       setAttempt(completedAttempt);
       if (!user) return;
       completeGameSession(
-        { sessionId, skill: memoryGridDefinition.skill, difficulty: DIFFICULTY, attempts: [completedAttempt] },
+        { sessionId, gameId: memoryGridDefinition.id, skill: memoryGridDefinition.skill, difficulty: DIFFICULTY, attempts: [completedAttempt] },
         user,
       )
-        .then(({ gameResult, updatedUser, xpAwarded: awarded, leveledUp: didLevelUp, newAchievements: earned }) => {
+        .then(({ gameResult, updatedUser, xpAwarded: awarded, leveledUp: didLevelUp, newAchievements: earned, isPersonalBest: personalBest }) => {
           setResult(gameResult);
           setUser(updatedUser);
           setXpAwarded(awarded);
           setLeveledUp(didLevelUp);
           setNewAchievements(earned);
-          setHistory((prev) => [...prev, gameResult]);
+          setIsPersonalBest(personalBest);
           setPhase('result');
         })
         .catch(console.error);
@@ -88,50 +88,63 @@ export default function MemoryGridHarnessPage() {
     setXpAwarded(0);
     setLeveledUp(false);
     setNewAchievements([]);
+    setIsPersonalBest(false);
     setPhase('idle');
   }
 
   const gridData = content?.data as MemoryGridData | undefined;
+  const level = user ? calculateLevel(user.xp) : null;
 
   return (
-    <main style={{ padding: 24, fontFamily: 'sans-serif' }}>
-      <h1>Memory Grid (harness)</h1>
-
-      <p>Player: {user?.id ?? 'loading...'}</p>
-
-      {phase === 'idle' && <button onClick={start}>Start</button>}
+    <GameShell gameName="Memory Grid">
+      {phase === 'idle' && (
+        <div className="flex-1 flex flex-col items-center justify-center gap-md text-center">
+          <p className="font-body text-body-md text-on-surface-variant">Memorize the highlighted cells, then select them.</p>
+          <button
+            type="button"
+            onClick={start}
+            className="h-14 px-lg bg-primary text-on-primary rounded-full font-label-bold text-label-bold shadow-md shadow-primary/20 active:scale-[0.98] transition-transform"
+          >
+            Start
+          </button>
+        </div>
+      )}
 
       {(phase === 'memorizing' || phase === 'answering') && gridData && (
-        <div>
-          <p>{phase === 'memorizing' ? 'Memorize the highlighted cells:' : content?.prompt}</p>
+        <div className="flex-1 flex flex-col items-center justify-center gap-md">
+          <p className="font-display text-headline-sm text-on-surface text-center">
+            {phase === 'memorizing' ? 'Memorize the highlighted cells' : content?.prompt}
+          </p>
           <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: `repeat(${gridData.gridSize}, 40px)`,
-              gap: 4,
-              marginTop: 8,
-            }}
+            className="grid gap-2"
+            style={{ gridTemplateColumns: `repeat(${gridData.gridSize}, 48px)` }}
           >
             {Array.from({ length: gridData.gridSize * gridData.gridSize }, (_, index) => {
               const isHighlighted = phase === 'memorizing' && gridData.highlightedPositions.includes(index);
               const isSelected = phase === 'answering' && selected.includes(index);
               return (
-                <div
+                <button
                   key={index}
+                  type="button"
                   onClick={() => phase === 'answering' && toggleCell(index)}
                   data-testid={`cell-${index}`}
-                  style={{
-                    width: 40,
-                    height: 40,
-                    backgroundColor: isHighlighted ? '#1e3a5f' : isSelected ? '#4a90d9' : '#e5e7eb',
-                    cursor: phase === 'answering' ? 'pointer' : 'default',
-                  }}
+                  className={`w-12 h-12 rounded-lg transition-colors ${
+                    isHighlighted
+                      ? 'bg-primary'
+                      : isSelected
+                        ? 'bg-primary-container'
+                        : 'bg-surface-container-highest hover:bg-surface-container-high'
+                  }`}
                 />
               );
             })}
           </div>
           {phase === 'answering' && (
-            <button onClick={submit} style={{ marginTop: 12 }}>
+            <button
+              type="button"
+              onClick={submit}
+              className="h-14 px-lg bg-primary text-on-primary rounded-full font-label-bold text-label-bold shadow-md shadow-primary/20 active:scale-[0.98] transition-transform mt-sm"
+            >
               Submit
             </button>
           )}
@@ -139,34 +152,20 @@ export default function MemoryGridHarnessPage() {
       )}
 
       {phase === 'result' && attempt && result && (
-        <div>
-          <p>{attempt.isCorrect ? 'Correct!' : 'Incorrect.'}</p>
-          <p>Your answer: {JSON.stringify(attempt.submittedAnswer)}</p>
-          <p>Correct answer: {JSON.stringify(attempt.content.correctAnswer)}</p>
-          <p>
-            Score: {result.score} | Accuracy: {result.accuracy}% | Speed: {result.speed}%
-          </p>
-          <p>+{xpAwarded} XP</p>
-          {leveledUp && user && (
-            <p>
-              Level up! You&apos;re now Level {user.level} — {calculateLevel(user.xp).name}
-            </p>
-          )}
-          {newAchievements.length > 0 && (
-            <p>New achievement{newAchievements.length > 1 ? 's' : ''}: {newAchievements.map((a) => a.name).join(', ')}</p>
-          )}
-          <button onClick={playAgain}>Play again</button>
+        <div className="flex-1 flex flex-col items-center justify-center py-md">
+          <GameResultCard
+            gameName="Memory Grid"
+            result={result}
+            xpAwarded={xpAwarded}
+            leveledUp={leveledUp}
+            levelName={level?.name}
+            levelNumber={level?.level}
+            newAchievements={newAchievements}
+            isPersonalBest={isPersonalBest}
+            onPlayAgain={playAgain}
+          />
         </div>
       )}
-
-      <h2>History</h2>
-      <ul>
-        {history.map((entry) => (
-          <li key={entry.sessionId}>
-            {entry.sessionId}: {entry.score} pts
-          </li>
-        ))}
-      </ul>
-    </main>
+    </GameShell>
   );
 }

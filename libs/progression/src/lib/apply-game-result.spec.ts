@@ -34,6 +34,7 @@ describe('applyGameResultToUser', () => {
     const output = applyGameResultToUser({ user: user(), result: latest, history: [latest] });
 
     expect(output.xpAwarded).toBe(150); // 100 base + 50 personal-best (first result for the skill)
+    expect(output.isPersonalBest).toBe(true);
     expect(output.user.xp).toBe(150);
     expect(output.user.streak).toBe(1);
     expect(output.user.achievementIds.sort()).toEqual(['first-challenge', 'perfect-round']);

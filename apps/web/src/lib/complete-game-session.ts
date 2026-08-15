@@ -10,21 +10,27 @@ export interface CompleteGameSessionResult {
   xpAwarded: number;
   leveledUp: boolean;
   newAchievements: Achievement[];
+  isPersonalBest: boolean;
 }
 
 export async function completeGameSession(
   scoringInput: CalculateGameResultInput,
   user: User,
 ): Promise<CompleteGameSessionResult> {
+  const previousHistory = await gameResultsStore.getAll();
   const gameResult = calculateGameResult(scoringInput);
-  await gameResultsStore.put(gameResult);
-  const history = await gameResultsStore.getAll();
+  // Achievement checks (e.g. history.length === 1 for "first challenge") expect history to
+  // already include the result being scored, so include it here rather than after persisting.
+  const historyIncludingCurrent = [...previousHistory, gameResult];
 
-  const { user: updatedUser, xpAwarded, leveledUp, newAchievements } = applyGameResultToUser({
+  const { user: updatedUser, xpAwarded, leveledUp, newAchievements, isPersonalBest } = applyGameResultToUser({
     user,
     result: gameResult,
-    history,
+    history: historyIncludingCurrent,
   });
+
+  const enrichedResult: GameResult = { ...gameResult, xpAwarded };
+  await gameResultsStore.put(enrichedResult);
 
   await updateGuestUser(user.id, {
     xp: updatedUser.xp,
@@ -34,5 +40,5 @@ export async function completeGameSession(
     achievementIds: updatedUser.achievementIds,
   });
 
-  return { gameResult, updatedUser, xpAwarded, leveledUp, newAchievements };
+  return { gameResult: enrichedResult, updatedUser, xpAwarded, leveledUp, newAchievements, isPersonalBest };
 }

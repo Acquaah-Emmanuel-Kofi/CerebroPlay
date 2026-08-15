@@ -17,6 +17,7 @@ describe('calculateGameResult', () => {
     const attempts = [attempt(true, 1000), attempt(false, 2000)];
     const result = calculateGameResult({
       sessionId: 'session-1',
+      gameId: 'rapid-recall',
       skill: 'memory',
       difficulty: 'easy',
       attempts,
@@ -33,6 +34,7 @@ describe('calculateGameResult', () => {
   it('always reports completed: true', () => {
     const result = calculateGameResult({
       sessionId: 'session-1',
+      gameId: 'rapid-recall',
       skill: 'memory',
       difficulty: 'easy',
       attempts: [],

@@ -7,7 +7,8 @@ import { calculateLevel } from '@cerebro-play/progression';
 import { getOrCreateGuestUser } from '@cerebro-play/user';
 import { Achievement, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
 import { completeGameSession } from '@/lib/complete-game-session';
-import { gameResultsStore } from '@/lib/game-results-store';
+import { GameShell } from '@/components/game-shell';
+import { GameResultCard } from '@/components/game-result-card';
 
 const MEMORIZE_DURATION_MS = 5000;
 const DIFFICULTY = 'easy';
@@ -22,14 +23,13 @@ export default function RapidRecallHarnessPage() {
   const [attempt, setAttempt] = useState<GameAttempt | null>(null);
   const [result, setResult] = useState<GameResult | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [history, setHistory] = useState<GameResult[]>([]);
   const [xpAwarded, setXpAwarded] = useState(0);
   const [leveledUp, setLeveledUp] = useState(false);
   const [newAchievements, setNewAchievements] = useState<Achievement[]>([]);
+  const [isPersonalBest, setIsPersonalBest] = useState(false);
 
   useEffect(() => {
     getOrCreateGuestUser().then(setUser).catch(console.error);
-    gameResultsStore.getAll().then(setHistory).catch(console.error);
   }, []);
 
   function start() {
@@ -47,16 +47,16 @@ export default function RapidRecallHarnessPage() {
       setAttempt(completedAttempt);
       if (!user) return;
       completeGameSession(
-        { sessionId, skill: rapidRecallDefinition.skill, difficulty: DIFFICULTY, attempts: [completedAttempt] },
+        { sessionId, gameId: rapidRecallDefinition.id, skill: rapidRecallDefinition.skill, difficulty: DIFFICULTY, attempts: [completedAttempt] },
         user,
       )
-        .then(({ gameResult, updatedUser, xpAwarded: awarded, leveledUp: didLevelUp, newAchievements: earned }) => {
+        .then(({ gameResult, updatedUser, xpAwarded: awarded, leveledUp: didLevelUp, newAchievements: earned, isPersonalBest: personalBest }) => {
           setResult(gameResult);
           setUser(updatedUser);
           setXpAwarded(awarded);
           setLeveledUp(didLevelUp);
           setNewAchievements(earned);
-          setHistory((prev) => [...prev, gameResult]);
+          setIsPersonalBest(personalBest);
           setPhase('result');
         })
         .catch(console.error);
@@ -80,61 +80,74 @@ export default function RapidRecallHarnessPage() {
     setXpAwarded(0);
     setLeveledUp(false);
     setNewAchievements([]);
+    setIsPersonalBest(false);
     setPhase('idle');
   }
 
+  const level = user ? calculateLevel(user.xp) : null;
+
   return (
-    <main style={{ padding: 24, fontFamily: 'sans-serif' }}>
-      <h1>Rapid Recall (harness)</h1>
-
-      <p>Player: {user?.id ?? 'loading...'}</p>
-
-      {phase === 'idle' && <button onClick={start}>Start</button>}
+    <GameShell gameName="Rapid Recall">
+      {phase === 'idle' && (
+        <div className="flex-1 flex flex-col items-center justify-center gap-md text-center">
+          <p className="font-body text-body-md text-on-surface-variant">
+            Memorize a short piece of data, then answer a question about it.
+          </p>
+          <button
+            type="button"
+            onClick={start}
+            className="h-14 px-lg bg-primary text-on-primary rounded-full font-label-bold text-label-bold shadow-md shadow-primary/20 active:scale-[0.98] transition-transform"
+          >
+            Start
+          </button>
+        </div>
+      )}
 
       {phase === 'memorizing' && content && (
-        <div>
-          <p>Memorize this:</p>
-          <pre>{JSON.stringify(content.data, null, 2)}</pre>
+        <div className="flex-1 flex flex-col items-center justify-center gap-md">
+          <p className="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">
+            Memorize this
+          </p>
+          <pre className="bg-surface-container-lowest rounded-xl p-md font-body text-body-md text-on-surface shadow-[0_4px_16px_rgba(65,42,231,0.06)] whitespace-pre-wrap">
+            {JSON.stringify(content.data, null, 2)}
+          </pre>
         </div>
       )}
 
       {phase === 'answering' && content && (
-        <div>
-          <p>{content.prompt}</p>
-          <input value={answer} onChange={(event) => setAnswer(event.target.value)} autoFocus />
-          <button onClick={submit}>Submit</button>
+        <div className="flex-1 flex flex-col items-center justify-center gap-md">
+          <p className="font-display text-headline-sm text-on-surface text-center">{content.prompt}</p>
+          <input
+            value={answer}
+            onChange={(event) => setAnswer(event.target.value)}
+            autoFocus
+            className="w-full h-14 px-md rounded-xl bg-surface-container border-2 border-transparent focus:border-primary focus:outline-none text-center font-body text-body-lg text-on-surface"
+          />
+          <button
+            type="button"
+            onClick={submit}
+            className="w-full h-14 bg-primary text-on-primary rounded-full font-label-bold text-label-bold shadow-md shadow-primary/20 active:scale-[0.98] transition-transform"
+          >
+            Submit
+          </button>
         </div>
       )}
 
       {phase === 'result' && attempt && result && (
-        <div>
-          <p>{attempt.isCorrect ? 'Correct!' : 'Incorrect.'}</p>
-          <p>Your answer: {String(attempt.submittedAnswer)}</p>
-          <p>Correct answer: {String(attempt.content.correctAnswer)}</p>
-          <p>
-            Score: {result.score} | Accuracy: {result.accuracy}% | Speed: {result.speed}%
-          </p>
-          <p>+{xpAwarded} XP</p>
-          {leveledUp && user && (
-            <p>
-              Level up! You&apos;re now Level {user.level} — {calculateLevel(user.xp).name}
-            </p>
-          )}
-          {newAchievements.length > 0 && (
-            <p>New achievement{newAchievements.length > 1 ? 's' : ''}: {newAchievements.map((a) => a.name).join(', ')}</p>
-          )}
-          <button onClick={playAgain}>Play again</button>
+        <div className="flex-1 flex flex-col items-center justify-center py-md">
+          <GameResultCard
+            gameName="Rapid Recall"
+            result={result}
+            xpAwarded={xpAwarded}
+            leveledUp={leveledUp}
+            levelName={level?.name}
+            levelNumber={level?.level}
+            newAchievements={newAchievements}
+            isPersonalBest={isPersonalBest}
+            onPlayAgain={playAgain}
+          />
         </div>
       )}
-
-      <h2>History</h2>
-      <ul>
-        {history.map((entry) => (
-          <li key={entry.sessionId}>
-            {entry.sessionId}: {entry.score} pts
-          </li>
-        ))}
-      </ul>
-    </main>
+    </GameShell>
   );
 }
