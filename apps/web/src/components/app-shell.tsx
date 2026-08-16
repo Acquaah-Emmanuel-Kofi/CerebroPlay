@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -29,7 +30,7 @@ export function AppShell({ children, streak }: AppShellProps) {
     <div className="min-h-screen bg-surface text-on-surface font-body flex flex-col md:flex-row pb-24 md:pb-0">
       <nav className="hidden md:flex flex-col w-64 bg-surface-container-lowest h-screen fixed left-0 top-0 shadow-[0_12px_32px_rgba(65,42,231,0.08)] z-40">
         <div className="p-lg flex items-center gap-sm">
-          <span aria-hidden="true" className="material-symbols-outlined filled text-primary text-3xl">psychology</span>
+          <Image src="/logo-mark.png" alt="" width={36} height={36} className="rounded-lg" />
           <span className="font-display text-headline-md text-primary">CerebroPlay</span>
         </div>
         <div className="flex flex-col px-md gap-sm mt-md">
@@ -43,7 +44,7 @@ export function AppShell({ children, streak }: AppShellProps) {
         {typeof streak === 'number' && (
           <header className="md:hidden flex justify-between items-center w-full max-w-content mx-auto px-margin-mobile py-sm">
             <div className="flex items-center gap-xs">
-              <span aria-hidden="true" className="material-symbols-outlined filled text-primary text-2xl">psychology</span>
+              <Image src="/logo-mark.png" alt="" width={28} height={28} className="rounded-md" />
               <span className="font-display text-display-lg-mobile text-primary font-bold">CerebroPlay</span>
             </div>
             <div className="flex items-center gap-xs bg-secondary-fixed/20 px-sm py-xs rounded-full">
