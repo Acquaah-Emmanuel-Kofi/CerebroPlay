@@ -10,6 +10,8 @@ interface GameResultCardProps {
   levelNumber?: number;
   newAchievements: Achievement[];
   isPersonalBest: boolean;
+  dailyChallengeCompletedNow: boolean;
+  dailyChallengeBonusXp: number;
   onPlayAgain: () => void;
 }
 
@@ -22,6 +24,8 @@ export function GameResultCard({
   levelNumber,
   newAchievements,
   isPersonalBest,
+  dailyChallengeCompletedNow,
+  dailyChallengeBonusXp,
   onPlayAgain,
 }: GameResultCardProps) {
   return (
@@ -42,10 +46,24 @@ export function GameResultCard({
         <div className="flex flex-col items-center justify-center py-md border-b border-surface-container mt-4">
           <span className="font-body text-body-md text-on-surface-variant mb-2">Final Score</span>
           <div className="font-display text-display-lg-mobile text-on-surface">{result.score}</div>
-          <div className="mt-4 bg-primary-container text-on-primary-container font-label-bold text-label-bold px-4 py-2 rounded-full flex items-center gap-2">
-            <span aria-hidden="true" className="material-symbols-outlined filled text-[18px]">star</span>+{xpAwarded} XP
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            <div className="bg-primary-container text-on-primary-container font-label-bold text-label-bold px-4 py-2 rounded-full flex items-center gap-2">
+              <span aria-hidden="true" className="material-symbols-outlined filled text-[18px]">star</span>+{xpAwarded} XP
+            </div>
+            {dailyChallengeCompletedNow && (
+              <div className="bg-secondary-container text-on-secondary-container font-label-bold text-label-bold px-4 py-2 rounded-full flex items-center gap-2">
+                <span aria-hidden="true" className="material-symbols-outlined filled text-[18px]">emoji_events</span>+
+                {dailyChallengeBonusXp} Daily Bonus
+              </div>
+            )}
           </div>
         </div>
+
+        {dailyChallengeCompletedNow && (
+          <p className="text-center font-label-bold text-label-bold text-secondary mt-md">
+            Today&apos;s 5 complete! 🎉
+          </p>
+        )}
 
         <div className="grid grid-cols-2 gap-md pt-md">
           <div className="flex flex-col items-center p-sm bg-surface rounded-xl">

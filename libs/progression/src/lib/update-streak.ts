@@ -1,6 +1,6 @@
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
-function toDateOnly(date: Date): string {
+export function toDateOnly(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
 
