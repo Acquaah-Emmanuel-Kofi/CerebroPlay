@@ -13,3 +13,4 @@ export * from './lib/focus/focus.generator';
 export * from './lib/equality-validator';
 export * from './lib/set-equality-validator';
 export * from './lib/game-catalog';
+export { difficultyToRoundCount, difficultyToTimeLimitMs, difficultyToMemorizeDurationMs } from '@cerebro-play/game-data';

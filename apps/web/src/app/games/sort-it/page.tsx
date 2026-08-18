@@ -2,16 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { GameEngine } from '@cerebro-play/game-engine';
-import { sortItDefinition } from '@cerebro-play/games';
+import { difficultyToRoundCount, sortItDefinition } from '@cerebro-play/games';
 import { calculateLevel } from '@cerebro-play/progression';
 import { getOrCreateGuestUser } from '@cerebro-play/user';
-import { Achievement, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
+import { Achievement, Difficulty, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
 import { completeGameSession } from '@/lib/complete-game-session';
+import { useDifficultyRecommendation } from '@/lib/use-difficulty-recommendation';
 import { GameShell } from '@/components/game-shell';
 import { GameResultCard } from '@/components/game-result-card';
-
-const DIFFICULTY = 'easy';
-const ROUNDS_PER_SESSION = 5;
+import { DifficultyPicker } from '@/components/difficulty-picker';
 
 interface SortItData {
   value: number;
@@ -24,12 +23,16 @@ type Phase = 'idle' | 'answering' | 'result';
 export default function SortItHarnessPage() {
   const engineRef = useRef<GameEngine | null>(null);
   const roundRef = useRef(0);
+  const totalRoundsRef = useRef(0);
   const attemptsRef = useRef<GameAttempt[]>([]);
   const sessionIdRef = useRef('');
+  const difficultyTouchedRef = useRef(false);
 
   const [phase, setPhase] = useState<Phase>('idle');
+  const [difficulty, setDifficulty] = useState<Difficulty>('easy');
   const [content, setContent] = useState<GameContent | null>(null);
   const [round, setRound] = useState(0);
+  const [totalRounds, setTotalRounds] = useState(difficultyToRoundCount('easy'));
   const [lastCorrect, setLastCorrect] = useState<boolean | null>(null);
   const [result, setResult] = useState<GameResult | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -40,9 +43,17 @@ export default function SortItHarnessPage() {
   const [dailyChallengeCompletedNow, setDailyChallengeCompletedNow] = useState(false);
   const [dailyChallengeBonusXp, setDailyChallengeBonusXp] = useState(0);
 
+  const recommendedDifficulty = useDifficultyRecommendation(user?.id, sortItDefinition.skill);
+
   useEffect(() => {
     getOrCreateGuestUser().then(setUser).catch(console.error);
   }, []);
+
+  useEffect(() => {
+    if (recommendedDifficulty && !difficultyTouchedRef.current) {
+      setDifficulty(recommendedDifficulty);
+    }
+  }, [recommendedDifficulty]);
 
   function start() {
     const sessionId = `session-${Date.now()}`;
@@ -63,8 +74,8 @@ export default function SortItHarnessPage() {
       attemptsRef.current = [...attemptsRef.current, attempt];
       setLastCorrect(attempt.isCorrect);
 
-      if (roundRef.current < ROUNDS_PER_SESSION) {
-        engine.start({ difficulty: DIFFICULTY });
+      if (roundRef.current < totalRoundsRef.current) {
+        engine.start({ difficulty });
         roundRef.current += 1;
         setRound(roundRef.current);
       } else {
@@ -74,7 +85,7 @@ export default function SortItHarnessPage() {
             sessionId: sessionIdRef.current,
             gameId: sortItDefinition.id,
             skill: sortItDefinition.skill,
-            difficulty: DIFFICULTY,
+            difficulty,
             attempts: attemptsRef.current,
           },
           user,
@@ -105,9 +116,11 @@ export default function SortItHarnessPage() {
       }
     });
 
+    totalRoundsRef.current = difficultyToRoundCount(difficulty);
+    setTotalRounds(totalRoundsRef.current);
     roundRef.current = 1;
     setRound(1);
-    engine.start({ difficulty: DIFFICULTY });
+    engine.start({ difficulty });
   }
 
   function submit(category: string) {
@@ -138,7 +151,7 @@ export default function SortItHarnessPage() {
       headerRight={
         phase === 'answering' ? (
           <span className="font-label-bold text-label-bold text-on-surface-variant">
-            {round}/{ROUNDS_PER_SESSION}
+            {round}/{totalRounds}
           </span>
         ) : undefined
       }
@@ -146,6 +159,14 @@ export default function SortItHarnessPage() {
       {phase === 'idle' && (
         <div className="flex-1 flex flex-col items-center justify-center gap-md text-center">
           <p className="font-body text-body-md text-on-surface-variant">Sort each item into the right category.</p>
+          <DifficultyPicker
+            value={difficulty}
+            onChange={(value) => {
+              difficultyTouchedRef.current = true;
+              setDifficulty(value);
+            }}
+            recommended={recommendedDifficulty ?? undefined}
+          />
           <button
             type="button"
             onClick={start}

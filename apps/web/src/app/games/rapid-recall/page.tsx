@@ -2,22 +2,23 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { GameEngine } from '@cerebro-play/game-engine';
-import { rapidRecallDefinition } from '@cerebro-play/games';
+import { difficultyToMemorizeDurationMs, rapidRecallDefinition } from '@cerebro-play/games';
 import { calculateLevel } from '@cerebro-play/progression';
 import { getOrCreateGuestUser } from '@cerebro-play/user';
-import { Achievement, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
+import { Achievement, Difficulty, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
 import { completeGameSession } from '@/lib/complete-game-session';
+import { useDifficultyRecommendation } from '@/lib/use-difficulty-recommendation';
 import { GameShell } from '@/components/game-shell';
 import { GameResultCard } from '@/components/game-result-card';
-
-const MEMORIZE_DURATION_MS = 5000;
-const DIFFICULTY = 'easy';
+import { DifficultyPicker } from '@/components/difficulty-picker';
 
 type Phase = 'idle' | 'memorizing' | 'answering' | 'result';
 
 export default function RapidRecallHarnessPage() {
   const engineRef = useRef<GameEngine | null>(null);
+  const difficultyTouchedRef = useRef(false);
   const [phase, setPhase] = useState<Phase>('idle');
+  const [difficulty, setDifficulty] = useState<Difficulty>('easy');
   const [content, setContent] = useState<GameContent | null>(null);
   const [answer, setAnswer] = useState('');
   const [attempt, setAttempt] = useState<GameAttempt | null>(null);
@@ -30,9 +31,17 @@ export default function RapidRecallHarnessPage() {
   const [dailyChallengeCompletedNow, setDailyChallengeCompletedNow] = useState(false);
   const [dailyChallengeBonusXp, setDailyChallengeBonusXp] = useState(0);
 
+  const recommendedDifficulty = useDifficultyRecommendation(user?.id, rapidRecallDefinition.skill);
+
   useEffect(() => {
     getOrCreateGuestUser().then(setUser).catch(console.error);
   }, []);
+
+  useEffect(() => {
+    if (recommendedDifficulty && !difficultyTouchedRef.current) {
+      setDifficulty(recommendedDifficulty);
+    }
+  }, [recommendedDifficulty]);
 
   function start() {
     const sessionId = `session-${Date.now()}`;
@@ -42,14 +51,14 @@ export default function RapidRecallHarnessPage() {
     engine.on('challengePresented', ({ content: presentedContent }) => {
       setContent(presentedContent);
       setPhase('memorizing');
-      setTimeout(() => setPhase('answering'), MEMORIZE_DURATION_MS);
+      setTimeout(() => setPhase('answering'), difficultyToMemorizeDurationMs(difficulty));
     });
 
     engine.on('attemptCompleted', ({ attempt: completedAttempt }) => {
       setAttempt(completedAttempt);
       if (!user) return;
       completeGameSession(
-        { sessionId, gameId: rapidRecallDefinition.id, skill: rapidRecallDefinition.skill, difficulty: DIFFICULTY, attempts: [completedAttempt] },
+        { sessionId, gameId: rapidRecallDefinition.id, skill: rapidRecallDefinition.skill, difficulty, attempts: [completedAttempt] },
         user,
       )
         .then(
@@ -77,7 +86,7 @@ export default function RapidRecallHarnessPage() {
         .catch(console.error);
     });
 
-    engine.start({ difficulty: DIFFICULTY, roleTheme: user?.role });
+    engine.start({ difficulty, roleTheme: user?.role });
   }
 
   function submit() {
@@ -110,6 +119,14 @@ export default function RapidRecallHarnessPage() {
           <p className="font-body text-body-md text-on-surface-variant">
             Memorize a short piece of data, then answer a question about it.
           </p>
+          <DifficultyPicker
+            value={difficulty}
+            onChange={(value) => {
+              difficultyTouchedRef.current = true;
+              setDifficulty(value);
+            }}
+            recommended={recommendedDifficulty ?? undefined}
+          />
           <button
             type="button"
             onClick={start}

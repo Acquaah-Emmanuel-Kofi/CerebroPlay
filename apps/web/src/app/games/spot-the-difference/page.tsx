@@ -5,12 +5,12 @@ import { GameEngine } from '@cerebro-play/game-engine';
 import { spotTheDifferenceDefinition } from '@cerebro-play/games';
 import { calculateLevel } from '@cerebro-play/progression';
 import { getOrCreateGuestUser } from '@cerebro-play/user';
-import { Achievement, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
+import { Achievement, Difficulty, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
 import { completeGameSession } from '@/lib/complete-game-session';
+import { useDifficultyRecommendation } from '@/lib/use-difficulty-recommendation';
 import { GameShell } from '@/components/game-shell';
 import { GameResultCard } from '@/components/game-result-card';
-
-const DIFFICULTY = 'easy';
+import { DifficultyPicker } from '@/components/difficulty-picker';
 
 interface SpotTheDifferenceData {
   gridSize: number;
@@ -50,7 +50,9 @@ function Grid({
 
 export default function SpotTheDifferenceHarnessPage() {
   const engineRef = useRef<GameEngine | null>(null);
+  const difficultyTouchedRef = useRef(false);
   const [phase, setPhase] = useState<Phase>('idle');
+  const [difficulty, setDifficulty] = useState<Difficulty>('easy');
   const [content, setContent] = useState<GameContent | null>(null);
   const [attempt, setAttempt] = useState<GameAttempt | null>(null);
   const [result, setResult] = useState<GameResult | null>(null);
@@ -62,9 +64,17 @@ export default function SpotTheDifferenceHarnessPage() {
   const [dailyChallengeCompletedNow, setDailyChallengeCompletedNow] = useState(false);
   const [dailyChallengeBonusXp, setDailyChallengeBonusXp] = useState(0);
 
+  const recommendedDifficulty = useDifficultyRecommendation(user?.id, spotTheDifferenceDefinition.skill);
+
   useEffect(() => {
     getOrCreateGuestUser().then(setUser).catch(console.error);
   }, []);
+
+  useEffect(() => {
+    if (recommendedDifficulty && !difficultyTouchedRef.current) {
+      setDifficulty(recommendedDifficulty);
+    }
+  }, [recommendedDifficulty]);
 
   function start() {
     const sessionId = `session-${Date.now()}`;
@@ -80,7 +90,7 @@ export default function SpotTheDifferenceHarnessPage() {
       setAttempt(completedAttempt);
       if (!user) return;
       completeGameSession(
-        { sessionId, gameId: spotTheDifferenceDefinition.id, skill: spotTheDifferenceDefinition.skill, difficulty: DIFFICULTY, attempts: [completedAttempt] },
+        { sessionId, gameId: spotTheDifferenceDefinition.id, skill: spotTheDifferenceDefinition.skill, difficulty, attempts: [completedAttempt] },
         user,
       )
         .then(
@@ -108,7 +118,7 @@ export default function SpotTheDifferenceHarnessPage() {
         .catch(console.error);
     });
 
-    engine.start({ difficulty: DIFFICULTY });
+    engine.start({ difficulty });
   }
 
   function submit(index: number) {
@@ -139,6 +149,14 @@ export default function SpotTheDifferenceHarnessPage() {
           <p className="font-body text-body-md text-on-surface-variant">
             Find the cell that changed between the two grids.
           </p>
+          <DifficultyPicker
+            value={difficulty}
+            onChange={(value) => {
+              difficultyTouchedRef.current = true;
+              setDifficulty(value);
+            }}
+            recommended={recommendedDifficulty ?? undefined}
+          />
           <button
             type="button"
             onClick={start}

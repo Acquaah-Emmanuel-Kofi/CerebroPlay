@@ -1,4 +1,7 @@
 ﻿export * from './lib/difficulty/count';
+export * from './lib/difficulty/round-count';
+export * from './lib/difficulty/time-limit';
+export * from './lib/difficulty/memorize-duration';
 export * from './lib/ordinal';
 export * from './lib/field-pool';
 export * from './lib/roles/general/rapid-recall';
