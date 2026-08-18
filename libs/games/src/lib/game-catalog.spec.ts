@@ -6,6 +6,7 @@ import { sortItDefinition } from './sort-it/sort-it.definition';
 import { focusDefinition } from './focus/focus.definition';
 import { mentalMathSprintDefinition } from './mental-math-sprint/mental-math-sprint.definition';
 import { oddOneOutDefinition } from './odd-one-out/odd-one-out.definition';
+import { verbalAnalogiesDefinition } from './verbal-analogies/verbal-analogies.definition';
 import { gameCatalog, gameDefinitionsById } from './game-catalog';
 
 describe('gameCatalog', () => {
@@ -59,6 +60,12 @@ describe('gameCatalog', () => {
         type: oddOneOutDefinition.type,
         skill: oddOneOutDefinition.skill,
       },
+      {
+        id: 'verbal-analogies',
+        name: 'Verbal Analogies',
+        type: verbalAnalogiesDefinition.type,
+        skill: verbalAnalogiesDefinition.skill,
+      },
     ]);
   });
 });
@@ -94,5 +101,9 @@ describe('gameDefinitionsById', () => {
 
   it('maps odd-one-out to the same oddOneOutDefinition object', () => {
     expect(gameDefinitionsById['odd-one-out']).toBe(oddOneOutDefinition);
+  });
+
+  it('maps verbal-analogies to the same verbalAnalogiesDefinition object', () => {
+    expect(gameDefinitionsById['verbal-analogies']).toBe(verbalAnalogiesDefinition);
   });
 });

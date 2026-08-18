@@ -7,6 +7,7 @@ import { sortItDefinition } from './sort-it/sort-it.definition';
 import { focusDefinition } from './focus/focus.definition';
 import { mentalMathSprintDefinition } from './mental-math-sprint/mental-math-sprint.definition';
 import { oddOneOutDefinition } from './odd-one-out/odd-one-out.definition';
+import { verbalAnalogiesDefinition } from './verbal-analogies/verbal-analogies.definition';
 
 export const gameCatalog: Game[] = [
   {
@@ -57,6 +58,12 @@ export const gameCatalog: Game[] = [
     type: oddOneOutDefinition.type,
     skill: oddOneOutDefinition.skill,
   },
+  {
+    id: verbalAnalogiesDefinition.id,
+    name: 'Verbal Analogies',
+    type: verbalAnalogiesDefinition.type,
+    skill: verbalAnalogiesDefinition.skill,
+  },
 ];
 
 export const gameDefinitionsById: Record<string, GameDefinition> = {
@@ -68,4 +75,5 @@ export const gameDefinitionsById: Record<string, GameDefinition> = {
   [focusDefinition.id]: focusDefinition,
   [mentalMathSprintDefinition.id]: mentalMathSprintDefinition,
   [oddOneOutDefinition.id]: oddOneOutDefinition,
+  [verbalAnalogiesDefinition.id]: verbalAnalogiesDefinition,
 };

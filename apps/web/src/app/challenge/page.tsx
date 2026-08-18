@@ -23,6 +23,7 @@ const GAME_ICONS: Record<string, string> = {
   focus: 'center_focus_strong',
   'mental-math-sprint': 'calculate',
   'odd-one-out': 'search',
+  'verbal-analogies': 'translate',
 };
 
 export default function ChallengePage() {

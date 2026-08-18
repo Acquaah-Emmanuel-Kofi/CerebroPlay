@@ -16,6 +16,7 @@ const GAME_ICONS: Record<string, string> = {
   focus: 'center_focus_strong',
   'mental-math-sprint': 'calculate',
   'odd-one-out': 'search',
+  'verbal-analogies': 'translate',
 };
 
 const DISABLED_TABS = ['Global', 'Profession', 'Country', 'Weekly'];
