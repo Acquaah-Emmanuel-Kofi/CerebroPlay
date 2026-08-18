@@ -14,6 +14,8 @@ const GAME_ICONS: Record<string, string> = {
   'spot-the-difference': 'compare',
   'sort-it': 'sync_alt',
   focus: 'center_focus_strong',
+  'mental-math-sprint': 'calculate',
+  'odd-one-out': 'search',
 };
 
 const DISABLED_TABS = ['Global', 'Profession', 'Country', 'Weekly'];

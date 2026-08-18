@@ -5,6 +5,8 @@ import { memoryGridDefinition } from './memory-grid/memory-grid.definition';
 import { spotTheDifferenceDefinition } from './spot-the-difference/spot-the-difference.definition';
 import { sortItDefinition } from './sort-it/sort-it.definition';
 import { focusDefinition } from './focus/focus.definition';
+import { mentalMathSprintDefinition } from './mental-math-sprint/mental-math-sprint.definition';
+import { oddOneOutDefinition } from './odd-one-out/odd-one-out.definition';
 
 export const gameCatalog: Game[] = [
   {
@@ -43,6 +45,18 @@ export const gameCatalog: Game[] = [
     type: focusDefinition.type,
     skill: focusDefinition.skill,
   },
+  {
+    id: mentalMathSprintDefinition.id,
+    name: 'Mental Math Sprint',
+    type: mentalMathSprintDefinition.type,
+    skill: mentalMathSprintDefinition.skill,
+  },
+  {
+    id: oddOneOutDefinition.id,
+    name: 'Odd One Out',
+    type: oddOneOutDefinition.type,
+    skill: oddOneOutDefinition.skill,
+  },
 ];
 
 export const gameDefinitionsById: Record<string, GameDefinition> = {
@@ -52,4 +66,6 @@ export const gameDefinitionsById: Record<string, GameDefinition> = {
   [spotTheDifferenceDefinition.id]: spotTheDifferenceDefinition,
   [sortItDefinition.id]: sortItDefinition,
   [focusDefinition.id]: focusDefinition,
+  [mentalMathSprintDefinition.id]: mentalMathSprintDefinition,
+  [oddOneOutDefinition.id]: oddOneOutDefinition,
 };

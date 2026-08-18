@@ -4,10 +4,12 @@ import { memoryGridDefinition } from './memory-grid/memory-grid.definition';
 import { spotTheDifferenceDefinition } from './spot-the-difference/spot-the-difference.definition';
 import { sortItDefinition } from './sort-it/sort-it.definition';
 import { focusDefinition } from './focus/focus.definition';
+import { mentalMathSprintDefinition } from './mental-math-sprint/mental-math-sprint.definition';
+import { oddOneOutDefinition } from './odd-one-out/odd-one-out.definition';
 import { gameCatalog, gameDefinitionsById } from './game-catalog';
 
 describe('gameCatalog', () => {
-  it('contains all six MVP games with the right id/type/skill', () => {
+  it('contains every game with the right id/type/skill', () => {
     expect(gameCatalog).toEqual([
       {
         id: 'rapid-recall',
@@ -45,6 +47,18 @@ describe('gameCatalog', () => {
         type: focusDefinition.type,
         skill: focusDefinition.skill,
       },
+      {
+        id: 'mental-math-sprint',
+        name: 'Mental Math Sprint',
+        type: mentalMathSprintDefinition.type,
+        skill: mentalMathSprintDefinition.skill,
+      },
+      {
+        id: 'odd-one-out',
+        name: 'Odd One Out',
+        type: oddOneOutDefinition.type,
+        skill: oddOneOutDefinition.skill,
+      },
     ]);
   });
 });
@@ -72,5 +86,13 @@ describe('gameDefinitionsById', () => {
 
   it('maps focus to the same focusDefinition object', () => {
     expect(gameDefinitionsById['focus']).toBe(focusDefinition);
+  });
+
+  it('maps mental-math-sprint to the same mentalMathSprintDefinition object', () => {
+    expect(gameDefinitionsById['mental-math-sprint']).toBe(mentalMathSprintDefinition);
+  });
+
+  it('maps odd-one-out to the same oddOneOutDefinition object', () => {
+    expect(gameDefinitionsById['odd-one-out']).toBe(oddOneOutDefinition);
   });
 });

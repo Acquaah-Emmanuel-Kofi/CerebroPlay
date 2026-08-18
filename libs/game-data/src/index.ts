@@ -14,3 +14,5 @@ export * from './lib/memory-grid';
 export * from './lib/spot-the-difference';
 export * from './lib/sort-it';
 export * from './lib/focus';
+export * from './lib/mental-math-sprint';
+export * from './lib/odd-one-out';
