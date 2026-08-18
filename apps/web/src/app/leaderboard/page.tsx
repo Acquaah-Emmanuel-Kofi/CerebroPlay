@@ -17,6 +17,7 @@ const GAME_ICONS: Record<string, string> = {
   'mental-math-sprint': 'calculate',
   'odd-one-out': 'search',
   'verbal-analogies': 'translate',
+  'matrix-reasoning': 'grid_on',
 };
 
 const DISABLED_TABS = ['Global', 'Profession', 'Country', 'Weekly'];

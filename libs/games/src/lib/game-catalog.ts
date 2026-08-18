@@ -8,6 +8,7 @@ import { focusDefinition } from './focus/focus.definition';
 import { mentalMathSprintDefinition } from './mental-math-sprint/mental-math-sprint.definition';
 import { oddOneOutDefinition } from './odd-one-out/odd-one-out.definition';
 import { verbalAnalogiesDefinition } from './verbal-analogies/verbal-analogies.definition';
+import { matrixReasoningDefinition } from './matrix-reasoning/matrix-reasoning.definition';
 
 export const gameCatalog: Game[] = [
   {
@@ -64,6 +65,12 @@ export const gameCatalog: Game[] = [
     type: verbalAnalogiesDefinition.type,
     skill: verbalAnalogiesDefinition.skill,
   },
+  {
+    id: matrixReasoningDefinition.id,
+    name: 'Matrix Reasoning',
+    type: matrixReasoningDefinition.type,
+    skill: matrixReasoningDefinition.skill,
+  },
 ];
 
 export const gameDefinitionsById: Record<string, GameDefinition> = {
@@ -76,4 +83,5 @@ export const gameDefinitionsById: Record<string, GameDefinition> = {
   [mentalMathSprintDefinition.id]: mentalMathSprintDefinition,
   [oddOneOutDefinition.id]: oddOneOutDefinition,
   [verbalAnalogiesDefinition.id]: verbalAnalogiesDefinition,
+  [matrixReasoningDefinition.id]: matrixReasoningDefinition,
 };

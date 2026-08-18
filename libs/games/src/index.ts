@@ -16,6 +16,8 @@ export * from './lib/odd-one-out/odd-one-out.definition';
 export * from './lib/odd-one-out/odd-one-out.generator';
 export * from './lib/verbal-analogies/verbal-analogies.definition';
 export * from './lib/verbal-analogies/verbal-analogies.generator';
+export * from './lib/matrix-reasoning/matrix-reasoning.definition';
+export * from './lib/matrix-reasoning/matrix-reasoning.generator';
 export * from './lib/equality-validator';
 export * from './lib/set-equality-validator';
 export * from './lib/game-catalog';

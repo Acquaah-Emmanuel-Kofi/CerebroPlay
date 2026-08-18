@@ -7,6 +7,7 @@ import { focusDefinition } from './focus/focus.definition';
 import { mentalMathSprintDefinition } from './mental-math-sprint/mental-math-sprint.definition';
 import { oddOneOutDefinition } from './odd-one-out/odd-one-out.definition';
 import { verbalAnalogiesDefinition } from './verbal-analogies/verbal-analogies.definition';
+import { matrixReasoningDefinition } from './matrix-reasoning/matrix-reasoning.definition';
 import { gameCatalog, gameDefinitionsById } from './game-catalog';
 
 describe('gameCatalog', () => {
@@ -66,6 +67,12 @@ describe('gameCatalog', () => {
         type: verbalAnalogiesDefinition.type,
         skill: verbalAnalogiesDefinition.skill,
       },
+      {
+        id: 'matrix-reasoning',
+        name: 'Matrix Reasoning',
+        type: matrixReasoningDefinition.type,
+        skill: matrixReasoningDefinition.skill,
+      },
     ]);
   });
 });
@@ -105,5 +112,9 @@ describe('gameDefinitionsById', () => {
 
   it('maps verbal-analogies to the same verbalAnalogiesDefinition object', () => {
     expect(gameDefinitionsById['verbal-analogies']).toBe(verbalAnalogiesDefinition);
+  });
+
+  it('maps matrix-reasoning to the same matrixReasoningDefinition object', () => {
+    expect(gameDefinitionsById['matrix-reasoning']).toBe(matrixReasoningDefinition);
   });
 });
