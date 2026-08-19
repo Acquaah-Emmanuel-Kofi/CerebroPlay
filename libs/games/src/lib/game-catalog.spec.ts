@@ -8,6 +8,7 @@ import { mentalMathSprintDefinition } from './mental-math-sprint/mental-math-spr
 import { oddOneOutDefinition } from './odd-one-out/odd-one-out.definition';
 import { verbalAnalogiesDefinition } from './verbal-analogies/verbal-analogies.definition';
 import { matrixReasoningDefinition } from './matrix-reasoning/matrix-reasoning.definition';
+import { wordScrambleDefinition } from './word-scramble/word-scramble.definition';
 import { gameCatalog, gameDefinitionsById } from './game-catalog';
 
 describe('gameCatalog', () => {
@@ -73,6 +74,12 @@ describe('gameCatalog', () => {
         type: matrixReasoningDefinition.type,
         skill: matrixReasoningDefinition.skill,
       },
+      {
+        id: 'word-scramble',
+        name: 'Word Scramble',
+        type: wordScrambleDefinition.type,
+        skill: wordScrambleDefinition.skill,
+      },
     ]);
   });
 });
@@ -116,5 +123,9 @@ describe('gameDefinitionsById', () => {
 
   it('maps matrix-reasoning to the same matrixReasoningDefinition object', () => {
     expect(gameDefinitionsById['matrix-reasoning']).toBe(matrixReasoningDefinition);
+  });
+
+  it('maps word-scramble to the same wordScrambleDefinition object', () => {
+    expect(gameDefinitionsById['word-scramble']).toBe(wordScrambleDefinition);
   });
 });

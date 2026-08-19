@@ -18,6 +18,7 @@ const GAME_ICONS: Record<string, string> = {
   'odd-one-out': 'search',
   'verbal-analogies': 'translate',
   'matrix-reasoning': 'grid_on',
+  'word-scramble': 'abc',
 };
 
 const DISABLED_TABS = ['Global', 'Profession', 'Country', 'Weekly'];

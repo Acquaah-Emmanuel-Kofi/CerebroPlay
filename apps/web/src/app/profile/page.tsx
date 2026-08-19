@@ -19,6 +19,7 @@ const SKILL_LABELS: Record<CognitiveSkill, string> = {
   numerical: 'Numerical',
   flexibility: 'Flexibility',
   problemSolving: 'Problem Solving',
+  verbal: 'Verbal',
 };
 
 const ALL_SKILLS = Object.keys(SKILL_LABELS) as CognitiveSkill[];

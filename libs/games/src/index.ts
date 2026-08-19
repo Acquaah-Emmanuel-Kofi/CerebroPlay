@@ -18,6 +18,8 @@ export * from './lib/verbal-analogies/verbal-analogies.definition';
 export * from './lib/verbal-analogies/verbal-analogies.generator';
 export * from './lib/matrix-reasoning/matrix-reasoning.definition';
 export * from './lib/matrix-reasoning/matrix-reasoning.generator';
+export * from './lib/word-scramble/word-scramble.definition';
+export * from './lib/word-scramble/word-scramble.generator';
 export * from './lib/equality-validator';
 export * from './lib/set-equality-validator';
 export * from './lib/game-catalog';

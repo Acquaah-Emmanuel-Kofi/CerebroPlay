@@ -9,6 +9,7 @@ import { mentalMathSprintDefinition } from './mental-math-sprint/mental-math-spr
 import { oddOneOutDefinition } from './odd-one-out/odd-one-out.definition';
 import { verbalAnalogiesDefinition } from './verbal-analogies/verbal-analogies.definition';
 import { matrixReasoningDefinition } from './matrix-reasoning/matrix-reasoning.definition';
+import { wordScrambleDefinition } from './word-scramble/word-scramble.definition';
 
 export const gameCatalog: Game[] = [
   {
@@ -71,6 +72,12 @@ export const gameCatalog: Game[] = [
     type: matrixReasoningDefinition.type,
     skill: matrixReasoningDefinition.skill,
   },
+  {
+    id: wordScrambleDefinition.id,
+    name: 'Word Scramble',
+    type: wordScrambleDefinition.type,
+    skill: wordScrambleDefinition.skill,
+  },
 ];
 
 export const gameDefinitionsById: Record<string, GameDefinition> = {
@@ -84,4 +91,5 @@ export const gameDefinitionsById: Record<string, GameDefinition> = {
   [oddOneOutDefinition.id]: oddOneOutDefinition,
   [verbalAnalogiesDefinition.id]: verbalAnalogiesDefinition,
   [matrixReasoningDefinition.id]: matrixReasoningDefinition,
+  [wordScrambleDefinition.id]: wordScrambleDefinition,
 };

@@ -17,7 +17,8 @@ export type CognitiveSkill =
   | 'visual'
   | 'numerical'
   | 'flexibility'
-  | 'problemSolving';
+  | 'problemSolving'
+  | 'verbal';
 
 export type RoleTheme = 'general' | 'software' | 'design' | 'finance' | 'marketing';
 

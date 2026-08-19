@@ -22,3 +22,4 @@ export * from './lib/focus';
 export * from './lib/mental-math-sprint';
 export * from './lib/odd-one-out';
 export * from './lib/matrix-reasoning';
+export * from './lib/word-scramble';

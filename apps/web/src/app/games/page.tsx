@@ -17,6 +17,7 @@ const GAME_ICONS: Record<string, string> = {
   'odd-one-out': 'search',
   'verbal-analogies': 'translate',
   'matrix-reasoning': 'grid_on',
+  'word-scramble': 'abc',
 };
 
 const SKILLS_WITH_GAMES = Array.from(new Set(gameCatalog.map((game) => game.skill))) as CognitiveSkill[];
