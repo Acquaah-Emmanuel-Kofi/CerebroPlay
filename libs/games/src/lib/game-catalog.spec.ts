@@ -10,6 +10,7 @@ import { verbalAnalogiesDefinition } from './verbal-analogies/verbal-analogies.d
 import { matrixReasoningDefinition } from './matrix-reasoning/matrix-reasoning.definition';
 import { wordScrambleDefinition } from './word-scramble/word-scramble.definition';
 import { zipPathDefinition } from './zip-path/zip-path.definition';
+import { binaryGridDefinition } from './binary-grid/binary-grid.definition';
 import { gameCatalog, gameDefinitionsById } from './game-catalog';
 
 describe('gameCatalog', () => {
@@ -87,6 +88,12 @@ describe('gameCatalog', () => {
         type: zipPathDefinition.type,
         skill: zipPathDefinition.skill,
       },
+      {
+        id: 'binary-grid',
+        name: 'Binary Grid',
+        type: binaryGridDefinition.type,
+        skill: binaryGridDefinition.skill,
+      },
     ]);
   });
 });
@@ -138,5 +145,9 @@ describe('gameDefinitionsById', () => {
 
   it('maps zip-path to the same zipPathDefinition object', () => {
     expect(gameDefinitionsById['zip-path']).toBe(zipPathDefinition);
+  });
+
+  it('maps binary-grid to the same binaryGridDefinition object', () => {
+    expect(gameDefinitionsById['binary-grid']).toBe(binaryGridDefinition);
   });
 });

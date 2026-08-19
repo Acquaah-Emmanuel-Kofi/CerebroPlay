@@ -20,6 +20,7 @@ const GAME_ICONS: Record<string, string> = {
   'matrix-reasoning': 'grid_on',
   'word-scramble': 'abc',
   'zip-path': 'polyline',
+  'binary-grid': 'brightness_medium',
 };
 
 const DISABLED_TABS = ['Global', 'Profession', 'Country', 'Weekly'];

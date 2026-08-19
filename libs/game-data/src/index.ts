@@ -24,3 +24,4 @@ export * from './lib/odd-one-out';
 export * from './lib/matrix-reasoning';
 export * from './lib/word-scramble';
 export * from './lib/zip-path';
+export * from './lib/binary-grid';

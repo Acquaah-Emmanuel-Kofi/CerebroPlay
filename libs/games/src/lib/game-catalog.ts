@@ -11,6 +11,7 @@ import { verbalAnalogiesDefinition } from './verbal-analogies/verbal-analogies.d
 import { matrixReasoningDefinition } from './matrix-reasoning/matrix-reasoning.definition';
 import { wordScrambleDefinition } from './word-scramble/word-scramble.definition';
 import { zipPathDefinition } from './zip-path/zip-path.definition';
+import { binaryGridDefinition } from './binary-grid/binary-grid.definition';
 
 export const gameCatalog: Game[] = [
   {
@@ -85,6 +86,12 @@ export const gameCatalog: Game[] = [
     type: zipPathDefinition.type,
     skill: zipPathDefinition.skill,
   },
+  {
+    id: binaryGridDefinition.id,
+    name: 'Binary Grid',
+    type: binaryGridDefinition.type,
+    skill: binaryGridDefinition.skill,
+  },
 ];
 
 export const gameDefinitionsById: Record<string, GameDefinition> = {
@@ -100,4 +107,5 @@ export const gameDefinitionsById: Record<string, GameDefinition> = {
   [matrixReasoningDefinition.id]: matrixReasoningDefinition,
   [wordScrambleDefinition.id]: wordScrambleDefinition,
   [zipPathDefinition.id]: zipPathDefinition,
+  [binaryGridDefinition.id]: binaryGridDefinition,
 };
