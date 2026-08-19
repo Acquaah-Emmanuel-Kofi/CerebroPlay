@@ -11,6 +11,7 @@ import { matrixReasoningDefinition } from './matrix-reasoning/matrix-reasoning.d
 import { wordScrambleDefinition } from './word-scramble/word-scramble.definition';
 import { zipPathDefinition } from './zip-path/zip-path.definition';
 import { binaryGridDefinition } from './binary-grid/binary-grid.definition';
+import { jigsawDefinition } from './jigsaw/jigsaw.definition';
 import { gameCatalog, gameDefinitionsById } from './game-catalog';
 
 describe('gameCatalog', () => {
@@ -94,6 +95,12 @@ describe('gameCatalog', () => {
         type: binaryGridDefinition.type,
         skill: binaryGridDefinition.skill,
       },
+      {
+        id: 'jigsaw',
+        name: 'Jigsaw',
+        type: jigsawDefinition.type,
+        skill: jigsawDefinition.skill,
+      },
     ]);
   });
 });
@@ -149,5 +156,9 @@ describe('gameDefinitionsById', () => {
 
   it('maps binary-grid to the same binaryGridDefinition object', () => {
     expect(gameDefinitionsById['binary-grid']).toBe(binaryGridDefinition);
+  });
+
+  it('maps jigsaw to the same jigsawDefinition object', () => {
+    expect(gameDefinitionsById['jigsaw']).toBe(jigsawDefinition);
   });
 });

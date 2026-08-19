@@ -12,6 +12,7 @@ import { matrixReasoningDefinition } from './matrix-reasoning/matrix-reasoning.d
 import { wordScrambleDefinition } from './word-scramble/word-scramble.definition';
 import { zipPathDefinition } from './zip-path/zip-path.definition';
 import { binaryGridDefinition } from './binary-grid/binary-grid.definition';
+import { jigsawDefinition } from './jigsaw/jigsaw.definition';
 
 export const gameCatalog: Game[] = [
   {
@@ -92,6 +93,12 @@ export const gameCatalog: Game[] = [
     type: binaryGridDefinition.type,
     skill: binaryGridDefinition.skill,
   },
+  {
+    id: jigsawDefinition.id,
+    name: 'Jigsaw',
+    type: jigsawDefinition.type,
+    skill: jigsawDefinition.skill,
+  },
 ];
 
 export const gameDefinitionsById: Record<string, GameDefinition> = {
@@ -108,4 +115,5 @@ export const gameDefinitionsById: Record<string, GameDefinition> = {
   [wordScrambleDefinition.id]: wordScrambleDefinition,
   [zipPathDefinition.id]: zipPathDefinition,
   [binaryGridDefinition.id]: binaryGridDefinition,
+  [jigsawDefinition.id]: jigsawDefinition,
 };

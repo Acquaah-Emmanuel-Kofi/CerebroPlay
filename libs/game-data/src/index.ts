@@ -25,3 +25,4 @@ export * from './lib/matrix-reasoning';
 export * from './lib/word-scramble';
 export * from './lib/zip-path';
 export * from './lib/binary-grid';
+export * from './lib/jigsaw';

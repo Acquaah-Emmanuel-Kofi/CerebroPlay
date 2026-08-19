@@ -20,6 +20,7 @@ const GAME_ICONS: Record<string, string> = {
   'word-scramble': 'abc',
   'zip-path': 'polyline',
   'binary-grid': 'brightness_medium',
+  jigsaw: 'extension',
 };
 
 const SKILLS_WITH_GAMES = Array.from(new Set(gameCatalog.map((game) => game.skill))) as CognitiveSkill[];

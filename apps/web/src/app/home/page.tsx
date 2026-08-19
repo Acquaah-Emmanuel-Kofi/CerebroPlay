@@ -30,6 +30,7 @@ const GAME_ICONS: Record<string, string> = {
   'word-scramble': 'abc',
   'zip-path': 'polyline',
   'binary-grid': 'brightness_medium',
+  jigsaw: 'extension',
 };
 
 function getGreeting(): string {
