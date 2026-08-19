@@ -28,6 +28,7 @@ const GAME_ICONS: Record<string, string> = {
   'verbal-analogies': 'translate',
   'matrix-reasoning': 'grid_on',
   'word-scramble': 'abc',
+  'zip-path': 'polyline',
 };
 
 function getGreeting(): string {

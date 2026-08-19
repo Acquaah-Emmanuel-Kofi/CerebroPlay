@@ -10,6 +10,7 @@ import { oddOneOutDefinition } from './odd-one-out/odd-one-out.definition';
 import { verbalAnalogiesDefinition } from './verbal-analogies/verbal-analogies.definition';
 import { matrixReasoningDefinition } from './matrix-reasoning/matrix-reasoning.definition';
 import { wordScrambleDefinition } from './word-scramble/word-scramble.definition';
+import { zipPathDefinition } from './zip-path/zip-path.definition';
 
 export const gameCatalog: Game[] = [
   {
@@ -78,6 +79,12 @@ export const gameCatalog: Game[] = [
     type: wordScrambleDefinition.type,
     skill: wordScrambleDefinition.skill,
   },
+  {
+    id: zipPathDefinition.id,
+    name: 'Zip Path',
+    type: zipPathDefinition.type,
+    skill: zipPathDefinition.skill,
+  },
 ];
 
 export const gameDefinitionsById: Record<string, GameDefinition> = {
@@ -92,4 +99,5 @@ export const gameDefinitionsById: Record<string, GameDefinition> = {
   [verbalAnalogiesDefinition.id]: verbalAnalogiesDefinition,
   [matrixReasoningDefinition.id]: matrixReasoningDefinition,
   [wordScrambleDefinition.id]: wordScrambleDefinition,
+  [zipPathDefinition.id]: zipPathDefinition,
 };

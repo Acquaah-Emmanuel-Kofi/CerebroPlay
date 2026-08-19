@@ -9,6 +9,7 @@ import { oddOneOutDefinition } from './odd-one-out/odd-one-out.definition';
 import { verbalAnalogiesDefinition } from './verbal-analogies/verbal-analogies.definition';
 import { matrixReasoningDefinition } from './matrix-reasoning/matrix-reasoning.definition';
 import { wordScrambleDefinition } from './word-scramble/word-scramble.definition';
+import { zipPathDefinition } from './zip-path/zip-path.definition';
 import { gameCatalog, gameDefinitionsById } from './game-catalog';
 
 describe('gameCatalog', () => {
@@ -80,6 +81,12 @@ describe('gameCatalog', () => {
         type: wordScrambleDefinition.type,
         skill: wordScrambleDefinition.skill,
       },
+      {
+        id: 'zip-path',
+        name: 'Zip Path',
+        type: zipPathDefinition.type,
+        skill: zipPathDefinition.skill,
+      },
     ]);
   });
 });
@@ -127,5 +134,9 @@ describe('gameDefinitionsById', () => {
 
   it('maps word-scramble to the same wordScrambleDefinition object', () => {
     expect(gameDefinitionsById['word-scramble']).toBe(wordScrambleDefinition);
+  });
+
+  it('maps zip-path to the same zipPathDefinition object', () => {
+    expect(gameDefinitionsById['zip-path']).toBe(zipPathDefinition);
   });
 });
