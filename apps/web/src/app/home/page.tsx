@@ -23,6 +23,14 @@ const GAME_ICONS: Record<string, string> = {
   'spot-the-difference': 'compare',
   'sort-it': 'sync_alt',
   focus: 'center_focus_strong',
+  'mental-math-sprint': 'calculate',
+  'odd-one-out': 'search',
+  'verbal-analogies': 'translate',
+  'matrix-reasoning': 'grid_on',
+  'word-scramble': 'abc',
+  'zip-path': 'polyline',
+  'binary-grid': 'brightness_medium',
+  jigsaw: 'extension',
 };
 
 function getGreeting(): string {

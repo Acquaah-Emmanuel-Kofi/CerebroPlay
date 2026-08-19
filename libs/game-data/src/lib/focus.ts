@@ -1,6 +1,11 @@
-import { GameContent } from '@cerebro-play/shared-models';
+import { Difficulty, GameContent } from '@cerebro-play/shared-models';
 
-const SYMBOL_POOL = ['🔴', '🔵', '🟢', '🟡', '🟣', '⬛'];
+const SYMBOL_POOL_BY_DIFFICULTY: Record<Difficulty, string[]> = {
+  easy: ['🔴', '🔵', '🟢', '🟡'],
+  medium: ['🔴', '🔵', '🟢', '🟡', '🟣', '⬛'],
+  hard: ['🔴', '🔵', '🟢', '🟡', '🟣', '⬛', '⬜', '🟠'],
+  expert: ['🔴', '🔵', '🟢', '🟡', '🟣', '⬛', '⬜', '🟠', '🟤', '🔶'],
+};
 
 export interface FocusData {
   symbol: string;
@@ -11,10 +16,11 @@ function randomFrom<T>(items: T[]): T {
   return items[Math.floor(Math.random() * items.length)];
 }
 
-export function generateFocus(): GameContent {
-  const target = randomFrom(SYMBOL_POOL);
+export function generateFocus(difficulty: Difficulty): GameContent {
+  const pool = SYMBOL_POOL_BY_DIFFICULTY[difficulty];
+  const target = randomFrom(pool);
   const showTarget = Math.random() < 0.5;
-  const symbol = showTarget ? target : randomFrom(SYMBOL_POOL.filter((s) => s !== target));
+  const symbol = showTarget ? target : randomFrom(pool.filter((s) => s !== target));
 
   const data: FocusData = { symbol, target };
 

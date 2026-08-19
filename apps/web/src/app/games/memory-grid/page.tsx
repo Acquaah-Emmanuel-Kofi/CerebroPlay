@@ -2,16 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { GameEngine } from '@cerebro-play/game-engine';
-import { memoryGridDefinition } from '@cerebro-play/games';
+import { difficultyToMemorizeDurationMs, memoryGridDefinition } from '@cerebro-play/games';
 import { calculateLevel } from '@cerebro-play/progression';
 import { getOrCreateGuestUser } from '@cerebro-play/user';
-import { Achievement, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
+import { Achievement, Difficulty, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
 import { completeGameSession } from '@/lib/complete-game-session';
+import { useDifficultyRecommendation } from '@/lib/use-difficulty-recommendation';
 import { GameShell } from '@/components/game-shell';
 import { GameResultCard } from '@/components/game-result-card';
-
-const MEMORIZE_DURATION_MS = 4000;
-const DIFFICULTY = 'easy';
+import { DifficultyPicker } from '@/components/difficulty-picker';
 
 interface MemoryGridData {
   gridSize: number;
@@ -22,7 +21,9 @@ type Phase = 'idle' | 'memorizing' | 'answering' | 'result';
 
 export default function MemoryGridHarnessPage() {
   const engineRef = useRef<GameEngine | null>(null);
+  const difficultyTouchedRef = useRef(false);
   const [phase, setPhase] = useState<Phase>('idle');
+  const [difficulty, setDifficulty] = useState<Difficulty>('easy');
   const [content, setContent] = useState<GameContent | null>(null);
   const [selected, setSelected] = useState<number[]>([]);
   const [attempt, setAttempt] = useState<GameAttempt | null>(null);
@@ -35,9 +36,17 @@ export default function MemoryGridHarnessPage() {
   const [dailyChallengeCompletedNow, setDailyChallengeCompletedNow] = useState(false);
   const [dailyChallengeBonusXp, setDailyChallengeBonusXp] = useState(0);
 
+  const recommendedDifficulty = useDifficultyRecommendation(user?.id, memoryGridDefinition.skill);
+
   useEffect(() => {
     getOrCreateGuestUser().then(setUser).catch(console.error);
   }, []);
+
+  useEffect(() => {
+    if (recommendedDifficulty && !difficultyTouchedRef.current) {
+      setDifficulty(recommendedDifficulty);
+    }
+  }, [recommendedDifficulty]);
 
   function start() {
     const sessionId = `session-${Date.now()}`;
@@ -48,14 +57,14 @@ export default function MemoryGridHarnessPage() {
       setContent(presentedContent);
       setSelected([]);
       setPhase('memorizing');
-      setTimeout(() => setPhase('answering'), MEMORIZE_DURATION_MS);
+      setTimeout(() => setPhase('answering'), difficultyToMemorizeDurationMs(difficulty));
     });
 
     engine.on('attemptCompleted', ({ attempt: completedAttempt }) => {
       setAttempt(completedAttempt);
       if (!user) return;
       completeGameSession(
-        { sessionId, gameId: memoryGridDefinition.id, skill: memoryGridDefinition.skill, difficulty: DIFFICULTY, attempts: [completedAttempt] },
+        { sessionId, gameId: memoryGridDefinition.id, skill: memoryGridDefinition.skill, difficulty, attempts: [completedAttempt] },
         user,
       )
         .then(
@@ -83,7 +92,7 @@ export default function MemoryGridHarnessPage() {
         .catch(console.error);
     });
 
-    engine.start({ difficulty: DIFFICULTY });
+    engine.start({ difficulty });
   }
 
   function toggleCell(index: number) {
@@ -117,6 +126,14 @@ export default function MemoryGridHarnessPage() {
       {phase === 'idle' && (
         <div className="flex-1 flex flex-col items-center justify-center gap-md text-center">
           <p className="font-body text-body-md text-on-surface-variant">Memorize the highlighted cells, then select them.</p>
+          <DifficultyPicker
+            value={difficulty}
+            onChange={(value) => {
+              difficultyTouchedRef.current = true;
+              setDifficulty(value);
+            }}
+            recommended={recommendedDifficulty ?? undefined}
+          />
           <button
             type="button"
             onClick={start}

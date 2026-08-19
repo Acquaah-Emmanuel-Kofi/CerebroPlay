@@ -2,17 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { GameEngine } from '@cerebro-play/game-engine';
-import { focusDefinition } from '@cerebro-play/games';
+import { difficultyToRoundCount, difficultyToTimeLimitMs, focusDefinition } from '@cerebro-play/games';
 import { calculateLevel } from '@cerebro-play/progression';
 import { getOrCreateGuestUser } from '@cerebro-play/user';
-import { Achievement, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
+import { Achievement, Difficulty, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
 import { completeGameSession } from '@/lib/complete-game-session';
+import { useDifficultyRecommendation } from '@/lib/use-difficulty-recommendation';
 import { GameShell } from '@/components/game-shell';
 import { GameResultCard } from '@/components/game-result-card';
-
-const DIFFICULTY = 'easy';
-const TIME_LIMIT_MS = 3000;
-const ROUNDS_PER_SESSION = 8;
+import { DifficultyPicker } from '@/components/difficulty-picker';
 
 interface FocusData {
   symbol: string;
@@ -25,12 +23,16 @@ type Outcome = 'correct' | 'incorrect' | 'timeout';
 export default function FocusHarnessPage() {
   const engineRef = useRef<GameEngine | null>(null);
   const roundRef = useRef(0);
+  const totalRoundsRef = useRef(0);
   const attemptsRef = useRef<GameAttempt[]>([]);
   const sessionIdRef = useRef('');
+  const difficultyTouchedRef = useRef(false);
 
   const [phase, setPhase] = useState<Phase>('idle');
+  const [difficulty, setDifficulty] = useState<Difficulty>('easy');
   const [content, setContent] = useState<GameContent | null>(null);
   const [round, setRound] = useState(0);
+  const [totalRounds, setTotalRounds] = useState(difficultyToRoundCount('easy'));
   const [lastOutcome, setLastOutcome] = useState<Outcome | null>(null);
   const [result, setResult] = useState<GameResult | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -41,9 +43,17 @@ export default function FocusHarnessPage() {
   const [dailyChallengeCompletedNow, setDailyChallengeCompletedNow] = useState(false);
   const [dailyChallengeBonusXp, setDailyChallengeBonusXp] = useState(0);
 
+  const recommendedDifficulty = useDifficultyRecommendation(user?.id, focusDefinition.skill);
+
   useEffect(() => {
     getOrCreateGuestUser().then(setUser).catch(console.error);
   }, []);
+
+  useEffect(() => {
+    if (recommendedDifficulty && !difficultyTouchedRef.current) {
+      setDifficulty(recommendedDifficulty);
+    }
+  }, [recommendedDifficulty]);
 
   function start() {
     const sessionId = `session-${Date.now()}`;
@@ -66,8 +76,8 @@ export default function FocusHarnessPage() {
         attempt.submittedAnswer === undefined ? 'timeout' : attempt.isCorrect ? 'correct' : 'incorrect';
       setLastOutcome(outcome);
 
-      if (roundRef.current < ROUNDS_PER_SESSION) {
-        engine.start({ difficulty: DIFFICULTY, timeLimitMs: TIME_LIMIT_MS });
+      if (roundRef.current < totalRoundsRef.current) {
+        engine.start({ difficulty, timeLimitMs: difficultyToTimeLimitMs(difficulty) });
         roundRef.current += 1;
         setRound(roundRef.current);
       } else {
@@ -77,7 +87,7 @@ export default function FocusHarnessPage() {
             sessionId: sessionIdRef.current,
             gameId: focusDefinition.id,
             skill: focusDefinition.skill,
-            difficulty: DIFFICULTY,
+            difficulty,
             attempts: attemptsRef.current,
           },
           user,
@@ -108,9 +118,11 @@ export default function FocusHarnessPage() {
       }
     });
 
+    totalRoundsRef.current = difficultyToRoundCount(difficulty);
+    setTotalRounds(totalRoundsRef.current);
     roundRef.current = 1;
     setRound(1);
-    engine.start({ difficulty: DIFFICULTY, timeLimitMs: TIME_LIMIT_MS });
+    engine.start({ difficulty, timeLimitMs: difficultyToTimeLimitMs(difficulty) });
   }
 
   function submit(answer: 'target' | 'skip') {
@@ -141,7 +153,7 @@ export default function FocusHarnessPage() {
       headerRight={
         phase === 'answering' ? (
           <span className="font-label-bold text-label-bold text-on-surface-variant">
-            {round}/{ROUNDS_PER_SESSION}
+            {round}/{totalRounds}
           </span>
         ) : undefined
       }
@@ -151,6 +163,14 @@ export default function FocusHarnessPage() {
           <p className="font-body text-body-md text-on-surface-variant">
             Tap Target! when the symbol matches, or Skip when it doesn&apos;t.
           </p>
+          <DifficultyPicker
+            value={difficulty}
+            onChange={(value) => {
+              difficultyTouchedRef.current = true;
+              setDifficulty(value);
+            }}
+            recommended={recommendedDifficulty ?? undefined}
+          />
           <button
             type="button"
             onClick={start}

@@ -5,18 +5,20 @@ import { GameEngine } from '@cerebro-play/game-engine';
 import { patternBreakerDefinition } from '@cerebro-play/games';
 import { calculateLevel } from '@cerebro-play/progression';
 import { getOrCreateGuestUser } from '@cerebro-play/user';
-import { Achievement, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
+import { Achievement, Difficulty, GameAttempt, GameContent, GameResult, User } from '@cerebro-play/shared-models';
 import { completeGameSession } from '@/lib/complete-game-session';
+import { useDifficultyRecommendation } from '@/lib/use-difficulty-recommendation';
 import { GameShell } from '@/components/game-shell';
 import { GameResultCard } from '@/components/game-result-card';
-
-const DIFFICULTY = 'easy';
+import { DifficultyPicker } from '@/components/difficulty-picker';
 
 type Phase = 'idle' | 'answering' | 'result';
 
 export default function PatternBreakerHarnessPage() {
   const engineRef = useRef<GameEngine | null>(null);
+  const difficultyTouchedRef = useRef(false);
   const [phase, setPhase] = useState<Phase>('idle');
+  const [difficulty, setDifficulty] = useState<Difficulty>('easy');
   const [content, setContent] = useState<GameContent | null>(null);
   const [answer, setAnswer] = useState('');
   const [attempt, setAttempt] = useState<GameAttempt | null>(null);
@@ -29,9 +31,17 @@ export default function PatternBreakerHarnessPage() {
   const [dailyChallengeCompletedNow, setDailyChallengeCompletedNow] = useState(false);
   const [dailyChallengeBonusXp, setDailyChallengeBonusXp] = useState(0);
 
+  const recommendedDifficulty = useDifficultyRecommendation(user?.id, patternBreakerDefinition.skill);
+
   useEffect(() => {
     getOrCreateGuestUser().then(setUser).catch(console.error);
   }, []);
+
+  useEffect(() => {
+    if (recommendedDifficulty && !difficultyTouchedRef.current) {
+      setDifficulty(recommendedDifficulty);
+    }
+  }, [recommendedDifficulty]);
 
   function start() {
     const sessionId = `session-${Date.now()}`;
@@ -47,7 +57,7 @@ export default function PatternBreakerHarnessPage() {
       setAttempt(completedAttempt);
       if (!user) return;
       completeGameSession(
-        { sessionId, gameId: patternBreakerDefinition.id, skill: patternBreakerDefinition.skill, difficulty: DIFFICULTY, attempts: [completedAttempt] },
+        { sessionId, gameId: patternBreakerDefinition.id, skill: patternBreakerDefinition.skill, difficulty, attempts: [completedAttempt] },
         user,
       )
         .then(
@@ -75,7 +85,7 @@ export default function PatternBreakerHarnessPage() {
         .catch(console.error);
     });
 
-    engine.start({ difficulty: DIFFICULTY });
+    engine.start({ difficulty });
   }
 
   function submit() {
@@ -106,6 +116,14 @@ export default function PatternBreakerHarnessPage() {
           <p className="font-body text-body-md text-on-surface-variant">
             Find the missing number in the sequence.
           </p>
+          <DifficultyPicker
+            value={difficulty}
+            onChange={(value) => {
+              difficultyTouchedRef.current = true;
+              setDifficulty(value);
+            }}
+            recommended={recommendedDifficulty ?? undefined}
+          />
           <button
             type="button"
             onClick={start}
